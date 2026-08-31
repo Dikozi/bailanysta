@@ -10,6 +10,13 @@ export async function listComments(
   viewerId: string | null,
   options: { cursor?: string; limit: number },
 ): Promise<Page<Comment>> {
+  // Автора поста запрашиваем один раз, а не join'ом на каждый комментарий.
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    select: { authorId: true },
+  });
+  if (!post) throw errors.notFound("Пост не найден");
+
   const cursor = decodeCursor(options.cursor);
 
   const rows = await prisma.comment.findMany({
@@ -34,7 +41,7 @@ export async function listComments(
   const last = page.at(-1);
 
   return {
-    items: page.map((row) => toCommentDTO(row, viewerId)),
+    items: page.map((row) => toCommentDTO(row, viewerId, post.authorId)),
     nextCursor: hasMore && last ? encodeCursor({ createdAt: last.createdAt, id: last.id }) : null,
   };
 }
@@ -77,7 +84,7 @@ export async function createComment(
     }
 
     return {
-      comment: toCommentDTO(created, authorId),
+      comment: toCommentDTO(created, authorId, post.authorId),
       commentsCount: updated.commentsCount,
     };
   });

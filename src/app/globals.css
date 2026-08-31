@@ -1,26 +1,252 @@
 @import "tailwindcss";
 
+/* ───────────────────────────────────────────────────────────────
+   Дизайн-токены Bailanysta
+
+   Светлая тема построена на тёплом off-white, а не на чистом белом:
+   #FFFFFF на весь экран даёт «дешёвый» пересвет, а тёплая подложка
+   делает белые карточки читаемой фигурой на фоне.
+
+   Тёмная тема — самостоятельная палитра, а не инверсия светлой:
+   тот же тёплый сдвиг, но контрасты пересобраны заново.
+   ─────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --ground: #f7f6f3; /* фон страницы */
+  --surface: #ffffff; /* карточки, панели */
+  --surface-muted: #f0eeea; /* «вдавленные» блоки, скелетоны */
+  --surface-hover: #f4f2ee;
+
+  --ink: #191817; /* основной текст */
+  --ink-muted: #6e6c66; /* второстепенный текст, метки времени */
+  --ink-faint: #9a978f; /* плейсхолдеры, дизейбл */
+
+  --line: #e4e1da; /* границы */
+  --line-strong: #d3cfc5;
+
+  --accent: #0f6b60; /* фирменный бирюзово-зелёный */
+  --accent-hover: #0c574e;
+  --accent-soft: #e2efec; /* заливка активных состояний */
+  --accent-ink: #ffffff; /* текст на акценте */
+
+  --like: #d93a5b; /* лайк — единственный красный в интерфейсе */
+  --like-soft: #fceef1;
+
+  --danger: #b4443a;
+  --danger-soft: #fbeeec;
+
+  --ring: #0f6b60;
+  --elevation-card: 0 1px 2px rgb(25 24 23 / 0.04), 0 1px 3px rgb(25 24 23 / 0.06);
+  --elevation-pop: 0 4px 12px rgb(25 24 23 / 0.08), 0 12px 32px rgb(25 24 23 / 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Системная тема: тёмная, пока пользователь явно не выбрал светлую. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --ground: #121110;
+    --surface: #1b1a18;
+    --surface-muted: #232220;
+    --surface-hover: #262421;
+
+    --ink: #f2f0ec;
+    --ink-muted: #a09c94;
+    --ink-faint: #6f6b64;
+
+    --line: #2e2c28;
+    --line-strong: #3d3a35;
+
+    --accent: #4ec4b0;
+    --accent-hover: #6ad3c1;
+    --accent-soft: #16302c;
+    --accent-ink: #08201c;
+
+    --like: #f2647f;
+    --like-soft: #33191f;
+
+    --danger: #e5776b;
+    --danger-soft: #331d1a;
+
+    --ring: #4ec4b0;
+    --elevation-card: 0 1px 2px rgb(0 0 0 / 0.4);
+    --elevation-pop: 0 4px 12px rgb(0 0 0 / 0.45), 0 12px 32px rgb(0 0 0 / 0.5);
   }
 }
 
+/* Явный выбор пользователя перевешивает системную настройку в обе стороны. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ground: #121110;
+  --surface: #1b1a18;
+  --surface-muted: #232220;
+  --surface-hover: #262421;
+
+  --ink: #f2f0ec;
+  --ink-muted: #a09c94;
+  --ink-faint: #6f6b64;
+
+  --line: #2e2c28;
+  --line-strong: #3d3a35;
+
+  --accent: #4ec4b0;
+  --accent-hover: #6ad3c1;
+  --accent-soft: #16302c;
+  --accent-ink: #08201c;
+
+  --like: #f2647f;
+  --like-soft: #33191f;
+
+  --danger: #e5776b;
+  --danger-soft: #331d1a;
+
+  --ring: #4ec4b0;
+  --elevation-card: 0 1px 2px rgb(0 0 0 / 0.4);
+  --elevation-pop: 0 4px 12px rgb(0 0 0 / 0.45), 0 12px 32px rgb(0 0 0 / 0.5);
+}
+
+/* Пробрасываем токены в утилиты Tailwind: bg-surface, text-ink-muted и т.д. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+
+  --color-like: var(--like);
+  --color-like-soft: var(--like-soft);
+
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+
+  --radius-card: 0.875rem;
+  --radius-control: 0.75rem;
+
+  --shadow-card: var(--elevation-card);
+  --shadow-pop: var(--elevation-pop);
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Базовые стили
+   ─────────────────────────────────────────────────────────────── */
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  /* 1.6 вместо стандартных 1.5: на кириллице более плотный интерлиньяж
+     заметно тяжелее читается в длинных абзацах. */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Единое кольцо фокуса — видимое и в светлой, и в тёмной теме. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* Полоса прокрутки не должна выпадать из палитры в тёмной теме. */
+@supports (scrollbar-color: auto) {
+  html {
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+/* Уважаем системную настройку «меньше движения». */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Пульсация скелетонов — мягче, чем стандартный animate-pulse Tailwind,
+   который на больших плашках выглядит навязчиво. */
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.skeleton {
+  background-color: var(--surface-muted);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/*
+ * Появление анимируется только трансформацией, без opacity.
+ *
+ * Анимация, уводящая элемент в opacity: 0, оставляет его невидимым, если
+ * кадры почему-то не отрисовались — например, во вкладке, где браузер
+ * притормозил рендеринг. Тост с сообщением об ошибке пропустить нельзя,
+ * поэтому элемент непрозрачен всегда, а движение служит лишь акцентом.
+ */
+@keyframes pop-in {
+  from {
+    transform: translateY(5px) scale(0.985);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.18s ease-out;
+}
+
+@keyframes like-burst {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-like-burst {
+  animation: like-burst 0.32s ease-out;
 }

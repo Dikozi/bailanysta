@@ -45,6 +45,12 @@ export type Comment = {
   createdAt: string;
   author: UserSummary;
   isMine: boolean;
+  /**
+   * Удалить комментарий может его автор и автор поста, как хозяин обсуждения.
+   * Право считает сервер — клиенту незачем знать правило, а прятать кнопку
+   * по одному лишь isMine означало бы расхождение UI с реальными правами API.
+   */
+  canDelete: boolean;
 };
 
 export type NotificationType = "LIKE" | "COMMENT" | "FOLLOW";

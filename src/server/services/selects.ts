@@ -75,13 +75,19 @@ export function toPostDTO(row: PostRow, viewerId: string | null): Post {
   };
 }
 
-export function toCommentDTO(row: CommentRow, viewerId: string | null): Comment {
+export function toCommentDTO(
+  row: CommentRow,
+  viewerId: string | null,
+  postAuthorId: string,
+): Comment {
+  const isMine = viewerId !== null && row.authorId === viewerId;
   return {
     id: row.id,
     content: row.content,
     createdAt: row.createdAt.toISOString(),
     author: row.author,
-    isMine: viewerId !== null && row.authorId === viewerId,
+    isMine,
+    canDelete: isMine || (viewerId !== null && viewerId === postAuthorId),
   };
 }
 

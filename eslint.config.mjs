@@ -5,13 +5,23 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
+  {
+    rules: {
+      // Отбрасывание поля через деструктуризацию (`const { passwordHash: _x, ...safe }`)
+      // — обычный приём, чтобы не вынести наружу лишнее. Префикс _ помечает намерение.
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
+    },
+  },
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Сгенерированный Prisma клиент линтовать бессмысленно.
+    "src/generated/**",
   ]),
 ]);
 
