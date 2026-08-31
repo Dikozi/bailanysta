@@ -24,10 +24,17 @@ const ICON_STYLES: Record<NotificationType, string> = {
   FOLLOW: "bg-surface-muted text-ink-muted",
 };
 
-const VERBS: Record<NotificationType, string> = {
-  LIKE: "оценил ваш пост",
-  COMMENT: "прокомментировал ваш пост",
-  FOLLOW: "подписался на вас",
+/*
+ * Формулировки намеренно без глаголов прошедшего времени.
+ *
+ * «Сабина прокомментировал» — рассогласование по роду, а рода пользователя
+ * мы не знаем и спрашивать его ради подписи к уведомлению не хотим.
+ * Отглагольные существительные снимают вопрос целиком.
+ */
+const EVENTS: Record<NotificationType, string> = {
+  LIKE: "Новый лайк на вашем посте",
+  COMMENT: "Новый комментарий к вашему посту",
+  FOLLOW: "Новый подписчик",
 };
 
 export function NotificationList() {
@@ -127,16 +134,17 @@ function NotificationRow({ notification }: { notification: Notification }) {
       </span>
 
       <div className="min-w-0 flex-1">
-        <p className="text-[15px] leading-snug">
-          <span className="font-bold">{notification.actor.displayName}</span>{" "}
-          <span className="text-ink-muted">{VERBS[notification.type]}</span>{" "}
-          <span className="text-[13px] text-ink-faint">
+        <p className="flex items-baseline gap-1.5 text-[15px] leading-snug">
+          <span className="truncate font-bold">{notification.actor.displayName}</span>
+          <span className="shrink-0 text-[13px] text-ink-faint">
             · {relativeTime(notification.createdAt)}
           </span>
         </p>
 
+        <p className="text-[14px] text-ink-muted">{EVENTS[notification.type]}</p>
+
         {notification.preview && (
-          <p className="mt-1 truncate text-[14px] text-ink-muted">{notification.preview}</p>
+          <p className="mt-1 truncate text-[14px] text-ink-faint">«{notification.preview}»</p>
         )}
       </div>
     </Link>

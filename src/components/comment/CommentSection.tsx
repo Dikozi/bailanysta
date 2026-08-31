@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Textarea } from "@/components/ui/Field";
 import { COMMENT_MAX_LENGTH } from "@/lib/constants";
@@ -141,6 +142,7 @@ function CommentList({ postId }: { postId: string }) {
 
 function CommentItem({ comment, postId }: { comment: Comment; postId: string }) {
   const deleteComment = useDeleteComment(postId);
+  const [confirming, setConfirming] = useState(false);
   const { toast } = useToast();
 
   return (
@@ -179,12 +181,7 @@ function CommentItem({ comment, postId }: { comment: Comment; postId: string }) 
             <button
               type="button"
               aria-label="Удалить комментарий"
-              onClick={() => {
-                if (!window.confirm("Удалить комментарий?")) return;
-                deleteComment.mutate(comment.id, {
-                  onError: (error) => toast(error.message, "error"),
-                });
-              }}
+              onClick={() => setConfirming(true)}
               className="-m-1 ml-auto rounded-full p-1 text-ink-faint opacity-0 transition hover:bg-danger-soft hover:text-danger focus-visible:opacity-100 group-hover:opacity-100"
             >
               <Trash2 className="size-4" />
@@ -196,6 +193,24 @@ function CommentItem({ comment, postId }: { comment: Comment; postId: string }) 
           {comment.content}
         </p>
       </div>
+
+      {confirming && (
+        <ConfirmDialog
+          title="Удалить комментарий"
+          description="Комментарий исчезнет из обсуждения без возможности восстановить."
+          loading={deleteComment.isPending}
+          onCancel={() => setConfirming(false)}
+          onConfirm={() =>
+            deleteComment.mutate(comment.id, {
+              onSuccess: () => setConfirming(false),
+              onError: (error) => {
+                toast(error.message, "error");
+                setConfirming(false);
+              },
+            })
+          }
+        />
+      )}
     </article>
   );
 }

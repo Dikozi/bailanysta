@@ -72,12 +72,24 @@ async function listRelated(
   const where =
     direction === "followers" ? { followingId: target.id } : { followerId: target.id };
 
+  // Ключ пагинации — пара (createdAt, id второго участника связи).
+  // Одного времени мало: две подписки, созданные в одну миллисекунду,
+  // не имели бы устойчивого порядка, и на границе страниц одна из них терялась.
+  const tieBreaker = direction === "followers" ? "followerId" : "followingId";
+
   const rows = await prisma.follow.findMany({
     where: {
       ...where,
-      ...(cursor ? { createdAt: { lt: cursor.createdAt } } : {}),
+      ...(cursor
+        ? {
+            OR: [
+              { createdAt: { lt: cursor.createdAt } },
+              { createdAt: cursor.createdAt, [tieBreaker]: { lt: cursor.id } },
+            ],
+          }
+        : {}),
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { [tieBreaker]: "desc" }],
     take: options.limit + 1,
     // Тянем обе стороны связи вместо условного select: лишний join на строку
     // ничего не стоит, зато типы остаются статическими, без union-ов.
@@ -90,12 +102,16 @@ async function listRelated(
 
   const hasMore = rows.length > options.limit;
   const page = hasMore ? rows.slice(0, options.limit) : rows;
+  const items = page.map((row) => (direction === "followers" ? row.follower : row.following));
   const last = page.at(-1);
+  const lastId = items.at(-1)?.id;
 
   return {
-    items: page.map((row) => (direction === "followers" ? row.follower : row.following)),
+    items,
     nextCursor:
-      hasMore && last ? encodeCursor({ createdAt: last.createdAt, id: target.id }) : null,
+      hasMore && last && lastId
+        ? encodeCursor({ createdAt: last.createdAt, id: lastId })
+        : null,
   };
 }
 

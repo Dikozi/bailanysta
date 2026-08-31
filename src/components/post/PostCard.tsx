@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Heart, MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Menu, MenuItem } from "@/components/ui/Menu";
 import { Textarea } from "@/components/ui/Field";
 import { POST_MAX_LENGTH } from "@/lib/constants";
@@ -20,6 +21,7 @@ import { PostContent } from "./PostContent";
 export function PostCard({ post, asLink = true }: { post: Post; asLink?: boolean }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   return (
     <article
@@ -45,7 +47,11 @@ export function PostCard({ post, asLink = true }: { post: Post; asLink?: boolean
         </Link>
 
         <div className="min-w-0 flex-1">
-          <PostHeader post={post} onEdit={() => setEditing(true)} />
+          <PostHeader
+            post={post}
+            onEdit={() => setEditing(true)}
+            onDelete={() => setConfirmingDelete(true)}
+          />
 
           {editing ? (
             <PostEditor post={post} onDone={() => setEditing(false)} />
@@ -58,11 +64,52 @@ export function PostCard({ post, asLink = true }: { post: Post; asLink?: boolean
           {!editing && <PostActions post={post} />}
         </div>
       </div>
+
+      {confirmingDelete && (
+        <DeletePostDialog post={post} onClose={() => setConfirmingDelete(false)} />
+      )}
     </article>
   );
 }
 
-function PostHeader({ post, onEdit }: { post: Post; onEdit: () => void }) {
+function DeletePostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
+  const deletePost = useDeletePost();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  return (
+    <ConfirmDialog
+      title="Удалить пост"
+      description="Пост исчезнет вместе со всеми лайками и комментариями. Отменить это будет нельзя."
+      loading={deletePost.isPending}
+      onCancel={onClose}
+      onConfirm={() =>
+        deletePost.mutate(post.id, {
+          onSuccess: () => {
+            toast("Пост удалён", "success");
+            onClose();
+            // Со страницы удалённого поста нужно уйти — иначе она тут же покажет 404.
+            if (window.location.pathname === `/post/${post.id}`) router.push("/");
+          },
+          onError: (error) => {
+            toast(error.message, "error");
+            onClose();
+          },
+        })
+      }
+    />
+  );
+}
+
+function PostHeader({
+  post,
+  onEdit,
+  onDelete,
+}: {
+  post: Post;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
   return (
     <div className="flex items-baseline gap-1.5">
       <Link
@@ -96,18 +143,14 @@ function PostHeader({ post, onEdit }: { post: Post; onEdit: () => void }) {
 
       {post.isMine && (
         <div className="ml-auto">
-          <PostMenu post={post} onEdit={onEdit} />
+          <PostMenu onEdit={onEdit} onDelete={onDelete} />
         </div>
       )}
     </div>
   );
 }
 
-function PostMenu({ post, onEdit }: { post: Post; onEdit: () => void }) {
-  const deletePost = useDeletePost();
-  const { toast } = useToast();
-  const router = useRouter();
-
+function PostMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
   return (
     <Menu
       trigger={({ toggle }) => (
@@ -137,17 +180,7 @@ function PostMenu({ post, onEdit }: { post: Post; onEdit: () => void }) {
             danger
             onClick={() => {
               close();
-              if (!window.confirm("Удалить пост? Это действие необратимо.")) return;
-
-              deletePost.mutate(post.id, {
-                onSuccess: () => {
-                  toast("Пост удалён", "success");
-                  // Со страницы удалённого поста нужно уйти — иначе она
-                  // тут же покажет 404.
-                  if (window.location.pathname === `/post/${post.id}`) router.push("/");
-                },
-                onError: (error) => toast(error.message, "error"),
-              });
+              onDelete();
             }}
           >
             Удалить

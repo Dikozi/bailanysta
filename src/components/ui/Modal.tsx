@@ -35,6 +35,9 @@ export function Modal({
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
+      // Окно часто открывается изнутри кликабельной карточки. Без остановки
+      // всплытия клик по подложке уходил бы «сквозь» и открывал пост.
+      onClick={(event) => event.stopPropagation()}
     >
       <div
         role="dialog"
