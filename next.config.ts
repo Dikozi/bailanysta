@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Next генерирует AGENTS.md/CLAUDE.md в корне; в репозитории проекта они не нужны.
+  agentRules: false,
 };
 
 export default nextConfig;
