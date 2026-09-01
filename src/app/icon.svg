@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!--
+    Монограмма Bailanysta: та же засечная буква, что и в логотипе,
+    на акцентном фоне. SVG, а не ICO: один файл вместо набора растровых
+    размеров, чёткий на любой плотности экрана, вес меньше килобайта.
+  -->
+  <rect width="32" height="32" rx="7" fill="#0f6b60" />
+  <text
+    x="16"
+    y="23"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="21"
+    fill="#ffffff"
+  >B</text>
+</svg>

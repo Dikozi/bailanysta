@@ -24,13 +24,32 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const DESCRIPTION =
+  "Bailanysta — социальная сеть: лента постов, профили, подписки, лайки и комментарии.";
+
 export const metadata: Metadata = {
+  // Без metadataBase относительные пути в Open Graph остаются относительными,
+  // а мессенджеры требуют абсолютный URL картинки — превью просто не появится.
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Bailanysta — социальная сеть",
     template: "%s · Bailanysta",
   },
-  description:
-    "Bailanysta — социальная сеть: лента постов, профили, подписки, лайки и комментарии.",
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    siteName: "Bailanysta",
+    title: "Bailanysta — социальная сеть",
+    description: DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bailanysta — социальная сеть",
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {

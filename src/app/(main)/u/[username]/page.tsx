@@ -4,6 +4,7 @@ import { FileText } from "lucide-react";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ProfileHeader } from "@/components/user/ProfileHeader";
 import { ProfileFeed } from "@/components/user/ProfileFeed";
+import { PostComposer } from "@/components/post/PostComposer";
 import { PAGE_SIZE } from "@/lib/constants";
 import { AppError } from "@/server/http";
 import { getSessionUserId } from "@/server/auth/session";
@@ -48,6 +49,16 @@ export default async function ProfilePage({ params }: Props) {
   return (
     <div className="space-y-3 pt-0 lg:pt-3">
       <ProfileHeader initialProfile={profile} />
+
+      {/*
+        Форма создания поста на собственном профиле — прямое требование ТЗ:
+        «страница профиля пользователя, где он может создавать посты».
+        На чужом профиле её быть не должно, поэтому условие по isMe.
+        Компонент самодостаточен: сам берёт пользователя из сессии и сам
+        обновляет все ленты после публикации.
+      */}
+      {profile.isMe && <PostComposer />}
+
       <ProfileFeed
         authorId={profile.id}
         initialPage={initialPage}
@@ -57,7 +68,7 @@ export default async function ProfilePage({ params }: Props) {
             title={profile.isMe ? "У вас пока нет постов" : "Пока нет постов"}
             description={
               profile.isMe
-                ? "Напишите первый пост на главной — он появится здесь."
+                ? "Форма прямо над этим блоком — напишите первый пост, и он появится здесь."
                 : `${profile.displayName} ещё ничего не публиковал.`
             }
           />
