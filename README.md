@@ -22,7 +22,7 @@
 
 | Профиль | Мобильная версия |
 | --- | --- |
-| ![Профиль с плиткой постов](docs/screenshots/profile.png) | ![Мобильная версия](docs/screenshots/mobile.png) |
+| ![Профиль с плиткой постов](docs/screenshots/profile.png) | ![Мобильная версия](docs/screenshots/mobile.jpg) |
 
 ---
 
