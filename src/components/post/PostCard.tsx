@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Heart, MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
@@ -43,6 +43,11 @@ export function PostCard({
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  // Кнопка «⋯», с которой открыли меню и выбрали «Удалить» — на неё диалог
+  // вернёт фокус после закрытия. Именно state, а не ref: значение читается
+  // во время рендера (в JSX диалога), а React 19 запрещает читать ref.current
+  // в рендере — такое чтение не гарантированно приводит к перерисовке.
+  const [deleteTrigger, setDeleteTrigger] = useState<HTMLElement | null>(null);
   const tile = variant === "tile";
 
   return (
@@ -75,13 +80,19 @@ export function PostCard({
             <TileHeader
               post={post}
               onEdit={() => setEditing(true)}
-              onDelete={() => setConfirmingDelete(true)}
+              onDelete={(trigger) => {
+                setDeleteTrigger(trigger);
+                setConfirmingDelete(true);
+              }}
             />
           ) : (
             <PostHeader
               post={post}
               onEdit={() => setEditing(true)}
-              onDelete={() => setConfirmingDelete(true)}
+              onDelete={(trigger) => {
+                setDeleteTrigger(trigger);
+                setConfirmingDelete(true);
+              }}
             />
           )}
 
@@ -98,7 +109,11 @@ export function PostCard({
       {!editing && <PostFooter post={post} compact={tile} />}
 
       {confirmingDelete && (
-        <DeletePostDialog post={post} onClose={() => setConfirmingDelete(false)} />
+        <DeletePostDialog
+          post={post}
+          onClose={() => setConfirmingDelete(false)}
+          restoreFocusTo={deleteTrigger}
+        />
       )}
     </article>
   );
@@ -111,7 +126,7 @@ function PostHeader({
 }: {
   post: Post;
   onEdit: () => void;
-  onDelete: () => void;
+  onDelete: (trigger: HTMLElement | null) => void;
 }) {
   return (
     <div className="flex items-baseline gap-1.5">
@@ -161,7 +176,7 @@ function TileHeader({
 }: {
   post: Post;
   onEdit: () => void;
-  onDelete: () => void;
+  onDelete: (trigger: HTMLElement | null) => void;
 }) {
   return (
     <div className="flex items-baseline gap-1.5">
@@ -308,11 +323,23 @@ function LikeButton({ post, compact = false }: { post: Post; compact?: boolean }
   );
 }
 
-function PostMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => void }) {
+function PostMenu({
+  onEdit,
+  onDelete,
+}: {
+  onEdit: () => void;
+  onDelete: (trigger: HTMLElement | null) => void;
+}) {
+  // Ссылка на саму кнопку «⋯»: она переживает закрытие выпадающего меню
+  // (в отличие от пункта «Удалить» внутри него), поэтому именно она годится
+  // как точка возврата фокуса после закрытия диалога подтверждения.
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
   return (
     <Menu
       trigger={({ toggle }) => (
         <button
+          ref={triggerRef}
           type="button"
           onClick={toggle}
           aria-label="Действия с постом"
@@ -338,7 +365,7 @@ function PostMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => vo
             danger
             onClick={() => {
               close();
-              onDelete();
+              onDelete(triggerRef.current);
             }}
           >
             Удалить
@@ -398,7 +425,15 @@ function PostEditor({ post, onDone }: { post: Post; onDone: () => void }) {
   );
 }
 
-function DeletePostDialog({ post, onClose }: { post: Post; onClose: () => void }) {
+function DeletePostDialog({
+  post,
+  onClose,
+  restoreFocusTo,
+}: {
+  post: Post;
+  onClose: () => void;
+  restoreFocusTo: HTMLElement | null;
+}) {
   const deletePost = useDeletePost();
   const { toast } = useToast();
   const router = useRouter();
@@ -408,6 +443,7 @@ function DeletePostDialog({ post, onClose }: { post: Post; onClose: () => void }
       title="Удалить пост"
       description="Пост исчезнет вместе со всеми лайками и комментариями. Отменить это будет нельзя."
       loading={deletePost.isPending}
+      restoreFocusTo={restoreFocusTo}
       onCancel={onClose}
       onConfirm={() =>
         deletePost.mutate(post.id, {

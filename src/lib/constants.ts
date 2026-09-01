@@ -1,5 +1,12 @@
 /** Общие ограничения и константы, одинаковые для клиента и сервера. */
 
+/**
+ * Публичный адрес сайта — источник истины для Open Graph, robots.txt
+ * и sitemap.xml. Без переменной окружения используется адрес дев-сервера,
+ * чтобы localhost не пытался генерировать абсолютные ссылки на прод.
+ */
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const POST_MAX_LENGTH = 500;
 export const COMMENT_MAX_LENGTH = 300;
 export const BIO_MAX_LENGTH = 200;
@@ -18,6 +25,14 @@ export const MAX_HASHTAGS_PER_POST = 10;
 /** AI-ассистент: не больше N генераций на пользователя за час. */
 export const AI_RATE_LIMIT = 15;
 export const AI_RATE_WINDOW_MS = 60 * 60 * 1000;
+
+/**
+ * Лимит неудачных попыток входа на один email за окно.
+ * 8 за 15 минут — легко прощает опечатку в пароле дважды-трижды подряд,
+ * но делает автоматический перебор пароля бессмысленным по скорости.
+ */
+export const LOGIN_ATTEMPT_LIMIT = 8;
+export const LOGIN_ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
 
 /** Как часто клиент опрашивает счётчик непрочитанных уведомлений. */
 export const NOTIFICATIONS_POLL_MS = 30_000;

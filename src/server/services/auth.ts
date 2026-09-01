@@ -3,6 +3,7 @@ import type { LoginInput, RegisterInput } from "@/lib/validation";
 import { prisma } from "@/server/db";
 import { errors } from "@/server/http";
 import { hashPassword, verifyPassword } from "@/server/auth/password";
+import { enforceLoginRateLimit, recordFailedLogin } from "@/server/ratelimit";
 import type { CurrentUser } from "@/types";
 
 const currentUserSelect = {
@@ -46,6 +47,10 @@ export async function register(input: RegisterInput): Promise<CurrentUser> {
 }
 
 export async function login(input: LoginInput): Promise<CurrentUser> {
+  // Проверяется до похода в базу за пользователем: смысла тратить запрос
+  // на заведомо заблокированную попытку нет.
+  await enforceLoginRateLimit(input.email);
+
   const user = await prisma.user.findUnique({
     where: { email: input.email },
     select: { ...currentUserSelect, passwordHash: true },
@@ -57,11 +62,15 @@ export async function login(input: LoginInput): Promise<CurrentUser> {
   if (!user) {
     // Всё равно считаем хеш, чтобы по времени ответа нельзя было отличить случаи.
     await verifyPassword(input.password, "$2a$10$invalidinvalidinvalidinvalidinvalidinvalidinvalidinv");
+    await recordFailedLogin(input.email);
     throw invalid;
   }
 
   const matches = await verifyPassword(input.password, user.passwordHash);
-  if (!matches) throw invalid;
+  if (!matches) {
+    await recordFailedLogin(input.email);
+    throw invalid;
+  }
 
   const { passwordHash: _passwordHash, ...safe } = user;
   return safe;

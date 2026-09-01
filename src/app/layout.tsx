@@ -3,7 +3,7 @@ import { Manrope, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
 import { AppProviders } from "@/providers/AppProviders";
 import { getCurrentUser } from "@/server/auth/session";
-import { COOKIE_THEME } from "@/lib/constants";
+import { COOKIE_THEME, SITE_URL } from "@/lib/constants";
 import { isTheme, type Theme } from "@/lib/theme";
 import "./globals.css";
 
@@ -24,7 +24,6 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const DESCRIPTION =
   "Bailanysta — социальная сеть: лента постов, профили, подписки, лайки и комментарии.";
 

@@ -16,6 +16,7 @@ export function ConfirmDialog({
   loading = false,
   onConfirm,
   onCancel,
+  restoreFocusTo,
 }: {
   title: string;
   description: string;
@@ -23,9 +24,11 @@ export function ConfirmDialog({
   loading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  /** См. Modal — нужно, если диалог открывает пункт выпадающего меню. */
+  restoreFocusTo?: HTMLElement | null;
 }) {
   return (
-    <Modal title={title} onClose={onCancel}>
+    <Modal title={title} onClose={onCancel} restoreFocusTo={restoreFocusTo}>
       <p className="text-[15px] leading-relaxed text-ink-muted">{description}</p>
       <div className="mt-6 flex justify-end gap-2">
         <Button variant="ghost" onClick={onCancel} disabled={loading}>

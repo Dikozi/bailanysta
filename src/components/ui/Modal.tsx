@@ -1,33 +1,93 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 
-/** Простое модальное окно: фон, Escape, блокировка прокрутки под ним. */
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Простое модальное окно: фон, Escape, блокировка прокрутки под ним,
+ * ловушка фокуса.
+ *
+ * Без ловушки Tab уводил фокус в контент позади затемнения — пользователь
+ * с клавиатуры или скринридером оказывался «вне» открытого диалога, хотя
+ * визуально он ещё на экране. Стандартный паттерн для диалогов (ARIA APG)
+ * требует держать фокус внутри, пока окно открыто, и вернуть его туда,
+ * откуда пришли, после закрытия.
+ */
 export function Modal({
   title,
   onClose,
+  restoreFocusTo,
   children,
 }: {
   title: string;
   onClose: () => void;
+  /**
+   * Куда вернуть фокус после закрытия, если авто-определение не годится.
+   *
+   * По умолчанию окно запоминает document.activeElement на момент открытия —
+   * это работает, если модалку открыла обычная кнопка. Но если её открыл пункт
+   * выпадающего меню, к моменту монтирования окна пункт уже размонтирован
+   * вместе со всем меню, и document.activeElement — это уже <body>. Вызывающая
+   * сторона в этом случае передаёт явную ссылку на настоящую кнопку-триггер
+   * (например, «⋯» у карточки поста), которая пережила закрытие меню.
+   */
+  restoreFocusTo?: HTMLElement | null;
   children: React.ReactNode;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    // Возвращаем фокус туда, откуда открыли окно — иначе после закрытия
+    // он остаётся на теле документа, и клавиатурная навигация «теряется».
+    const previouslyFocused =
+      restoreFocusTo !== undefined ? restoreFocusTo : (document.activeElement as HTMLElement | null);
+
+    const focusables = () =>
+      Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? []);
+
+    // Фокус — на первый элемент внутри диалога, а не на сам div: так скринридер
+    // сразу озвучивает что-то интерактивное, а не безымянный контейнер.
+    focusables()[0]?.focus();
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      // Список запрашивается заново на каждый Tab: содержимое диалога может
+      // меняться (например, кнопка дизейблится во время отправки формы).
+      const items = focusables();
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKeyDown);
 
     // Иначе фон прокручивается «под» окном, что дезориентирует на мобильном.
-    const previous = document.body.style.overflow;
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previous;
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus();
     };
-  }, [onClose]);
+  }, [onClose, restoreFocusTo]);
 
   return (
     <div
@@ -40,6 +100,7 @@ export function Modal({
       onClick={(event) => event.stopPropagation()}
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
