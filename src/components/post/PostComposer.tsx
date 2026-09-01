@@ -75,7 +75,9 @@ export function PostComposer() {
             type="button"
             data-composer-input
             onClick={open}
-            className="h-11 flex-1 rounded-full bg-surface-muted px-4 text-left text-[15px] text-ink-faint transition-colors hover:bg-surface-hover"
+            // truncate обязателен: длинное имя переносило текст на вторую
+            // строку, и он вылезал за пределы пилюли фиксированной высоты.
+            className="h-11 min-w-0 flex-1 truncate rounded-full bg-surface-muted px-4 text-left text-[15px] text-ink-faint transition-colors hover:bg-surface-hover"
           >
             Что происходит, {user.displayName.split(" ")[0]}?
           </button>
