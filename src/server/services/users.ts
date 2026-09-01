@@ -1,7 +1,8 @@
 import { prisma } from "@/server/db";
 import { errors } from "@/server/http";
 import type { UpdateProfileInput } from "@/lib/validation";
-import type { CurrentUser, UserProfile } from "@/types";
+import type { CurrentUser, UserProfile, UserSummary } from "@/types";
+import { userSummarySelect } from "./selects";
 
 export async function getProfile(
   username: string,
@@ -57,4 +58,33 @@ export async function updateProfile(
       bio: true,
     },
   });
+}
+
+/**
+ * Авторы для верхнего ряда ленты.
+ *
+ * Сортировка по числу постов, а не по подписчикам: ряд должен вести туда,
+ * где есть что читать. Пользователи без единого поста отсекаются — пустой
+ * профиль за красивым аватаром обманывает ожидание.
+ */
+export async function getActiveAuthors(limit = 12): Promise<UserSummary[]> {
+  const rows = await prisma.user.findMany({
+    where: { posts: { some: {} } },
+    orderBy: { posts: { _count: "desc" } },
+    take: limit,
+    select: userSummarySelect,
+  });
+
+  return rows;
+}
+
+/** Сводные числа для титульного экрана. */
+export async function getPublicStats() {
+  const [authors, posts, hashtags] = await Promise.all([
+    prisma.user.count(),
+    prisma.post.count(),
+    prisma.hashtag.count(),
+  ]);
+
+  return { authors, posts, hashtags };
 }

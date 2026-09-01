@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { AiAssistPanel } from "@/components/ai/AiAssistPanel";
@@ -13,8 +12,16 @@ import { useCreatePost } from "@/hooks/usePosts";
 import { useCurrentUser } from "@/providers/SessionProvider";
 import { useToast } from "@/providers/ToastProvider";
 
+/**
+ * Форма создания поста по образцу «стены» Facebook.
+ *
+ * В свёрнутом виде это одна строка-пилюля: она не давит на ленту и не просит
+ * ничего, пока пользователь сам не захочет написать. По клику разворачивается
+ * в полноценный редактор с AI-помощником и счётчиком символов.
+ */
 export function PostComposer() {
   const user = useCurrentUser();
+  const [expanded, setExpanded] = useState(false);
   const [content, setContent] = useState("");
   const [aiOpen, setAiOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -28,45 +35,85 @@ export function PostComposer() {
     if (!element) return;
     element.style.height = "auto";
     element.style.height = `${Math.min(element.scrollHeight, 260)}px`;
-  }, [content]);
+  }, [content, expanded]);
 
-  if (!user) return <GuestPrompt />;
+  if (!user) return null;
 
   const trimmed = content.trim();
   const remaining = POST_MAX_LENGTH - trimmed.length;
   const canSubmit = trimmed.length > 0 && remaining >= 0 && !createPost.isPending;
+
+  const open = () => {
+    setExpanded(true);
+    // Фокус после разворачивания: до появления поля фокусировать нечего.
+    window.setTimeout(() => textareaRef.current?.focus(), 0);
+  };
+
+  const collapse = () => {
+    setExpanded(false);
+    setAiOpen(false);
+  };
 
   const submit = () => {
     if (!canSubmit) return;
     createPost.mutate(trimmed, {
       onSuccess: () => {
         setContent("");
-        setAiOpen(false);
+        collapse();
         toast("Пост опубликован", "success");
       },
       onError: (error) => toast(error.message, "error"),
     });
   };
 
+  if (!expanded) {
+    return (
+      <div className="rounded-2xl border border-line bg-surface p-3 shadow-card sm:p-4">
+        <div className="flex items-center gap-3">
+          <Avatar displayName={user.displayName} avatarColor={user.avatarColor} />
+          <button
+            type="button"
+            data-composer-input
+            onClick={open}
+            className="h-11 flex-1 rounded-full bg-surface-muted px-4 text-left text-[15px] text-ink-faint transition-colors hover:bg-surface-hover"
+          >
+            Что происходит, {user.displayName.split(" ")[0]}?
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              open();
+              setAiOpen(true);
+            }}
+            aria-label="Открыть AI-помощник"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-accent-soft hover:text-accent"
+          >
+            <Sparkles className="size-5" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="border-b border-line bg-surface px-4 py-4 sm:px-5">
-      <div className="flex gap-3">
+    <div className="rounded-2xl border border-line bg-surface shadow-card">
+      <div className="flex gap-3 px-4 pt-4 sm:px-5 sm:pt-5">
         <Avatar displayName={user.displayName} avatarColor={user.avatarColor} />
 
         <div className="min-w-0 flex-1">
           <Textarea
             ref={textareaRef}
-            data-composer-input
             value={content}
             onChange={(event) => setContent(event.target.value)}
             // Ctrl/Cmd+Enter — привычное сочетание для отправки в текстовом поле.
             onKeyDown={(event) => {
               if ((event.metaKey || event.ctrlKey) && event.key === "Enter") submit();
+              if (event.key === "Escape" && trimmed.length === 0) collapse();
             }}
             placeholder="Что происходит?"
             aria-label="Текст нового поста"
-            rows={2}
-            className="min-h-[60px] border-0 bg-transparent px-0 text-[17px] focus:border-0"
+            rows={3}
+            className="min-h-[84px] border-0 bg-transparent px-0 text-[17px] focus:border-0"
           />
 
           {aiOpen && (
@@ -80,26 +127,31 @@ export function PostComposer() {
               }
             />
           )}
+        </div>
+      </div>
 
-          <div className="mt-3 flex items-center gap-3 border-t border-line pt-3">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setAiOpen((open) => !open)}
-              aria-expanded={aiOpen}
-              className={cn(aiOpen && "text-accent")}
-            >
-              <Sparkles className="size-4" />
-              AI-помощник
-            </Button>
+      <div className="mt-3 flex items-center gap-2 border-t border-line px-4 py-3 sm:px-5">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setAiOpen((value) => !value)}
+          aria-expanded={aiOpen}
+          className={cn(aiOpen && "text-accent")}
+        >
+          <Sparkles className="size-4" />
+          AI-помощник
+        </Button>
 
-            <CharacterCounter remaining={remaining} />
+        <CharacterCounter remaining={remaining} />
 
-            <Button className="ml-auto" onClick={submit} loading={createPost.isPending} disabled={!canSubmit}>
-              Опубликовать
-            </Button>
-          </div>
+        <div className="ml-auto flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={collapse} disabled={createPost.isPending}>
+            Отмена
+          </Button>
+          <Button onClick={submit} loading={createPost.isPending} disabled={!canSubmit}>
+            Опубликовать
+          </Button>
         </div>
       </div>
     </div>
@@ -122,30 +174,5 @@ function CharacterCounter({ remaining }: { remaining: number }) {
     >
       {remaining}
     </span>
-  );
-}
-
-function GuestPrompt() {
-  return (
-    <div className="border-b border-line bg-surface px-5 py-6 text-center">
-      <p className="font-display text-lg">Присоединяйтесь к разговору</p>
-      <p className="mt-1 text-sm text-ink-muted">
-        Войдите, чтобы писать посты, ставить лайки и комментировать.
-      </p>
-      <div className="mt-4 flex justify-center gap-2">
-        <Link
-          href="/login"
-          className="flex h-10 items-center rounded-full bg-accent px-5 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
-        >
-          Войти
-        </Link>
-        <Link
-          href="/register"
-          className="flex h-10 items-center rounded-full border border-line-strong px-5 text-sm font-semibold transition-colors hover:bg-surface-hover"
-        >
-          Создать аккаунт
-        </Link>
-      </div>
-    </div>
   );
 }

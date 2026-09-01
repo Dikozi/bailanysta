@@ -17,22 +17,25 @@ import { PostCard } from "./PostCard";
  */
 export function PostSkeleton() {
   return (
-    <div className="flex gap-3 border-b border-line bg-surface px-4 py-4 sm:px-5">
-      <Skeleton className="size-10 shrink-0 rounded-full" />
-      <div className="flex-1 space-y-2.5">
-        <div className="flex gap-2">
-          <Skeleton className="h-3.5 w-28" />
-          <Skeleton className="h-3.5 w-20" />
+    <div className="rounded-2xl border border-line bg-surface shadow-card">
+      <div className="flex gap-3 px-4 pt-4 sm:px-5 sm:pt-5">
+        <Skeleton className="size-10 shrink-0 rounded-full" />
+        <div className="flex-1 space-y-2.5">
+          <div className="flex gap-2">
+            <Skeleton className="h-3.5 w-28" />
+            <Skeleton className="h-3.5 w-20" />
+          </div>
+          <div className="space-y-1.5">
+            <Skeleton className="h-3.5 w-full" />
+            <Skeleton className="h-3.5 w-11/12" />
+            <Skeleton className="h-3.5 w-2/3" />
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Skeleton className="h-3.5 w-full" />
-          <Skeleton className="h-3.5 w-11/12" />
-          <Skeleton className="h-3.5 w-2/3" />
-        </div>
-        <div className="flex gap-4 pt-1">
-          <Skeleton className="h-4 w-10" />
-          <Skeleton className="h-4 w-10" />
-        </div>
+      </div>
+      {/* Подвал с двумя кнопками — та же геометрия, что у настоящей карточки. */}
+      <div className="mt-3 flex gap-2 border-t border-line px-4 py-2.5 sm:px-5">
+        <Skeleton className="h-6 flex-1 rounded-xl" />
+        <Skeleton className="h-6 flex-1 rounded-xl" />
       </div>
     </div>
   );
@@ -40,7 +43,7 @@ export function PostSkeleton() {
 
 export function PostListSkeleton({ count = 5 }: { count?: number }) {
   return (
-    <div aria-busy="true" aria-label="Загрузка постов">
+    <div aria-busy="true" aria-label="Загрузка постов" className="space-y-3">
       {Array.from({ length: count }).map((_, index) => (
         <PostSkeleton key={index} />
       ))}
@@ -96,7 +99,7 @@ export function PostList({
   if (posts.length === 0) return <>{emptyState}</>;
 
   return (
-    <div>
+    <div className="space-y-3">
       {posts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}

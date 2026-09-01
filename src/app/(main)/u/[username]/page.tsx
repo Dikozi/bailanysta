@@ -46,7 +46,7 @@ export default async function ProfilePage({ params }: Props) {
   );
 
   return (
-    <>
+    <div className="space-y-3 pt-0 lg:pt-3">
       <ProfileHeader initialProfile={profile} />
       <ProfileFeed
         authorId={profile.id}
@@ -63,6 +63,6 @@ export default async function ProfilePage({ params }: Props) {
           />
         }
       />
-    </>
+    </div>
   );
 }

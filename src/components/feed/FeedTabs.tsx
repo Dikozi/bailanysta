@@ -25,7 +25,10 @@ export function FeedTabs({ initialPage }: { initialPage: Page<Post> }) {
   return (
     <>
       {user && (
-        <div role="tablist" className="sticky top-[57px] z-10 flex border-b border-line bg-ground/90 backdrop-blur lg:top-0">
+        <div
+          role="tablist"
+          className="sticky top-[57px] z-10 mb-3 flex overflow-hidden rounded-2xl border border-line bg-surface/95 shadow-card backdrop-blur lg:top-3"
+        >
           <TabButton active={tab === "global"} onClick={() => setTab("global")}>
             Все посты
           </TabButton>

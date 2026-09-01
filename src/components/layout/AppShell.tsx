@@ -62,9 +62,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Центральная колонка — контент.
-          Тонкие боковые границы отделяют ленту от фона: без них колонка
-          «плавает» и на широком экране непонятно, где кончается контент. */}
-      <main className="min-w-0 flex-1 border-line pb-24 lg:min-h-dvh lg:max-w-[600px] lg:border-x lg:pb-24">
+          Границ у колонки нет: структуру теперь задают сами карточки,
+          и вторая рамка вокруг них только загрязняла бы картинку. */}
+      <main className="min-w-0 flex-1 px-3 pb-24 sm:px-0 lg:max-w-[640px] lg:pb-24">
         <MobileHeader />
         {children}
       </main>

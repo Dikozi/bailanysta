@@ -19,7 +19,7 @@ export function ProfileHeader({ initialProfile }: { initialProfile: UserProfile 
   if (!profile) return null;
 
   return (
-    <header className="border-b border-line bg-surface px-4 py-5 sm:px-5">
+    <header className="rounded-2xl border border-line bg-surface px-4 py-5 shadow-card sm:px-6 sm:py-6">
       <div className="flex items-start gap-4">
         <Avatar
           displayName={profile.displayName}
