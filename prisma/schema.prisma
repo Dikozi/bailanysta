@@ -30,14 +30,20 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posts         Post[]
-  comments      Comment[]
-  likes         Like[]
-  following     Follow[]       @relation("Following")
-  followers     Follow[]       @relation("Followers")
-  notifications Notification[] @relation("NotificationRecipient")
-  actions       Notification[] @relation("NotificationActor")
-  aiUsages      AiUsage[]
+  // Статус — короткая свободная строка под именем, как «в сети» в мессенджерах
+  // прошлого поколения, только без автоматики: пользователь пишет и стирает сам.
+  status String? @db.VarChar(80)
+
+  posts               Post[]
+  comments            Comment[]
+  likes               Like[]
+  sentFriendRequests  FriendRequest[] @relation("SentFriendRequests")
+  friendRequestsToMe  FriendRequest[] @relation("ReceivedFriendRequests")
+  sentMessages        Message[]       @relation("SentMessages")
+  receivedMessages    Message[]       @relation("ReceivedMessages")
+  notifications       Notification[]  @relation("NotificationRecipient")
+  actions             Notification[]  @relation("NotificationActor")
+  aiUsages            AiUsage[]
 
   // Поиск людей по имени/нику — триграммный индекс, работает для ru/kk/en одинаково.
   @@index([displayName(ops: raw("gin_trgm_ops"))], type: Gin)
@@ -108,16 +114,69 @@ model Comment {
   @@index([authorId])
 }
 
-model Follow {
-  followerId  String
-  followingId String
-  follower    User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User   @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+// ─────────────────────────────────────────────────────────────
+//  Дружба
+// ─────────────────────────────────────────────────────────────
 
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+}
+
+/**
+ * Дружба хранится одной направленной строкой «кто кому написал первым»,
+ * а не отдельной симметричной таблицей Friendship — так проще: принятие
+ * заявки это UPDATE одной строки, а не удаление одной записи и вставка
+ * новой в другую таблицу.
+ *
+ * «Кто дружит с кем» — это OR по обеим сторонам строки с status=ACCEPTED,
+ * см. server/services/friends.ts.
+ *
+ * Если пока заявка от A к B висит PENDING, а B в это время сам решает
+ * написать заявку A — это не два конфликтующих ряда, а немедленное
+ * принятие уже существующей: сервис сначала проверяет встречную заявку.
+ */
+model FriendRequest {
+  id         String              @id @default(cuid())
+  senderId   String
+  receiverId String
+  sender     User                @relation("SentFriendRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User                @relation("ReceivedFriendRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+
+  @@unique([senderId, receiverId])
+  @@index([receiverId, status])
+  @@index([senderId, status])
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Личные сообщения
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Отдельной сущности «беседа» нет — она выводится из пары (senderId,
+ * receiverId). Отдельная таблица Conversation оправдана в мессенджере
+ * с групповыми чатами; здесь только личные 1:1, и заводить лишнюю
+ * сущность ради этого было бы избыточно.
+ */
+model Message {
+  id         String @id @default(cuid())
+  senderId   String
+  receiverId String
+  sender     User   @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User   @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  content String @db.VarChar(1000)
+
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  @@id([followerId, followingId])
-  @@index([followingId])
+  // Индексы под обе стороны переписки — список сообщений конкретной беседы
+  // читается то от «я → он», то от «он → я» в одном запросе (OR).
+  @@index([senderId, receiverId, createdAt])
+  @@index([receiverId, senderId, createdAt])
+  @@index([receiverId, isRead])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -127,7 +186,8 @@ model Follow {
 enum NotificationType {
   LIKE
   COMMENT
-  FOLLOW
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
 }
 
 model Notification {

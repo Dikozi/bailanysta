@@ -10,6 +10,8 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:30
 export const POST_MAX_LENGTH = 500;
 export const COMMENT_MAX_LENGTH = 300;
 export const BIO_MAX_LENGTH = 200;
+export const STATUS_MAX_LENGTH = 80;
+export const MESSAGE_MAX_LENGTH = 1000;
 export const DISPLAY_NAME_MAX_LENGTH = 40;
 export const USERNAME_MIN_LENGTH = 3;
 export const USERNAME_MAX_LENGTH = 20;
@@ -36,6 +38,17 @@ export const LOGIN_ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
 
 /** Как часто клиент опрашивает счётчик непрочитанных уведомлений. */
 export const NOTIFICATIONS_POLL_MS = 30_000;
+
+/** Список бесед опрашивается реже, чем открытая переписка — там счётчик, а не текст. */
+export const CONVERSATIONS_POLL_MS = 30_000;
+
+/**
+ * Открытая переписка обновляется чаще уведомлений: собеседник ждёт ответа
+ * в реальном времени, и задержка в 30 секунд ощущалась бы как зависание.
+ * Опрос, а не WebSocket — по той же причине, что и везде в проекте:
+ * serverless-функции Vercel не держат постоянные соединения.
+ */
+export const MESSAGES_POLL_MS = 3_500;
 
 /**
  * Палитра аватаров. Картинки не загружаем — вместо них инициалы на фоне,

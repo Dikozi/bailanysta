@@ -9,10 +9,10 @@ import { useFeed } from "@/hooks/usePosts";
 import { useCurrentUser } from "@/providers/SessionProvider";
 import type { Page, Post } from "@/types";
 
-type Tab = "global" | "following";
+type Tab = "global" | "friends";
 
 /**
- * Две ленты в одном экране. Вкладка «Подписки» показывается только тем,
+ * Две ленты в одном экране. Вкладка «Друзья» показывается только тем,
  * кто вошёл: гостю она была бы всегда пустой и выглядела бы поломкой.
  */
 export function FeedTabs({ initialPage }: { initialPage: Page<Post> }) {
@@ -20,7 +20,7 @@ export function FeedTabs({ initialPage }: { initialPage: Page<Post> }) {
   const [tab, setTab] = useState<Tab>("global");
 
   const globalFeed = useFeed({ feed: "global" }, initialPage);
-  const followingFeed = useFeed({ feed: "following" });
+  const friendsFeed = useFeed({ feed: "friends" });
 
   return (
     <>
@@ -32,8 +32,8 @@ export function FeedTabs({ initialPage }: { initialPage: Page<Post> }) {
           <TabButton active={tab === "global"} onClick={() => setTab("global")}>
             Все посты
           </TabButton>
-          <TabButton active={tab === "following"} onClick={() => setTab("following")}>
-            Подписки
+          <TabButton active={tab === "friends"} onClick={() => setTab("friends")}>
+            Друзья
           </TabButton>
         </div>
       )}
@@ -51,12 +51,12 @@ export function FeedTabs({ initialPage }: { initialPage: Page<Post> }) {
         />
       ) : (
         <PostList
-          query={followingFeed}
+          query={friendsFeed}
           emptyState={
             <EmptyState
               icon={Users}
-              title="Здесь появятся посты тех, на кого вы подписаны"
-              description="Найдите интересных людей через поиск и подпишитесь — их посты соберутся в этой ленте."
+              title="Здесь появятся посты ваших друзей"
+              description="Найдите людей через поиск, отправьте заявку в друзья — их посты соберутся в этой ленте."
             />
           }
         />

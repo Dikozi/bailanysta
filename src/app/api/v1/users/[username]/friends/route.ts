@@ -1,12 +1,12 @@
 import { searchParamsOf } from "@/lib/query";
 import { paginationSchema } from "@/lib/validation";
 import { ok, route } from "@/server/http";
-import { listFollowers } from "@/server/services/follows";
+import { listFriends } from "@/server/services/friends";
 
 type Context = { params: Promise<{ username: string }> };
 
 export const GET = route<Context>(async (request, { params }) => {
   const { username } = await params;
   const options = paginationSchema.parse(searchParamsOf(request));
-  return ok(await listFollowers(username.toLowerCase(), options));
+  return ok(await listFriends(username.toLowerCase(), options));
 });

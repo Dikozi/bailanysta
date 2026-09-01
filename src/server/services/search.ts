@@ -74,7 +74,9 @@ export async function search(query: string, viewerId: string | null): Promise<Se
           { username: { contains: bare, mode: "insensitive" } },
         ],
       },
-      orderBy: { followers: { _count: "desc" } },
+      // Число подписчиков ушло вместе с Follow — используем число постов
+      // как ближайший по духу сигнал «этот человек тут активен».
+      orderBy: { posts: { _count: "desc" } },
       take: USERS_LIMIT,
       select: userSummarySelect,
     }),

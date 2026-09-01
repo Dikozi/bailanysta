@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
-import { BIO_MAX_LENGTH } from "@/lib/constants";
+import { BIO_MAX_LENGTH, STATUS_MAX_LENGTH } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 import { useLogout, useUpdateProfile } from "@/hooks/useAuth";
 import { useCurrentUser } from "@/providers/SessionProvider";
@@ -18,6 +18,7 @@ export function SettingsForm() {
   const user = useCurrentUser();
   const [displayName, setDisplayName] = useState(user?.displayName ?? "");
   const [bio, setBio] = useState(user?.bio ?? "");
+  const [status, setStatus] = useState(user?.status ?? "");
   const updateProfile = useUpdateProfile();
   const logout = useLogout();
   const { toast } = useToast();
@@ -27,8 +28,12 @@ export function SettingsForm() {
   const fields =
     updateProfile.error instanceof ApiRequestError ? updateProfile.error.fields : undefined;
 
-  const unchanged = displayName.trim() === user.displayName && bio.trim() === (user.bio ?? "");
+  const unchanged =
+    displayName.trim() === user.displayName &&
+    bio.trim() === (user.bio ?? "") &&
+    status.trim() === (user.status ?? "");
   const bioLeft = BIO_MAX_LENGTH - bio.trim().length;
+  const statusLeft = STATUS_MAX_LENGTH - status.trim().length;
 
   return (
     <div className="space-y-4 p-4 sm:p-5">
@@ -53,7 +58,11 @@ export function SettingsForm() {
           onSubmit={(event) => {
             event.preventDefault();
             updateProfile.mutate(
-              { displayName: displayName.trim(), bio: bio.trim() || null },
+              {
+                displayName: displayName.trim(),
+                bio: bio.trim() || null,
+                status: status.trim() || null,
+              },
               {
                 onSuccess: () => toast("Профиль обновлён", "success"),
                 onError: (error) => toast(error.message, "error"),
@@ -70,6 +79,35 @@ export function SettingsForm() {
                 aria-describedby={describedBy}
                 aria-invalid={invalid}
               />
+            )}
+          </Field>
+
+          <Field
+            label="Статус"
+            error={fields?.status}
+            hint="Короткая строка под именем — например, чем вы сейчас заняты"
+          >
+            {({ id, describedBy, invalid }) => (
+              <>
+                <Input
+                  id={id}
+                  value={status}
+                  onChange={(event) => setStatus(event.target.value)}
+                  placeholder="Например: пишу диплом, отвечаю редко"
+                  aria-describedby={describedBy}
+                  aria-invalid={invalid}
+                />
+                {statusLeft < 20 && (
+                  <p
+                    className={cn(
+                      "mt-1 text-right text-[13px] tabular-nums",
+                      statusLeft < 0 ? "text-danger" : "text-ink-faint",
+                    )}
+                  >
+                    {statusLeft}
+                  </p>
+                )}
+              </>
             )}
           </Field>
 
@@ -100,7 +138,9 @@ export function SettingsForm() {
           <Button
             type="submit"
             loading={updateProfile.isPending}
-            disabled={unchanged || displayName.trim().length === 0 || bioLeft < 0}
+            disabled={
+              unchanged || displayName.trim().length === 0 || bioLeft < 0 || statusLeft < 0
+            }
           >
             Сохранить
           </Button>

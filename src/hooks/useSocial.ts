@@ -79,7 +79,7 @@ export function useDeleteComment(postId: string) {
   });
 }
 
-/* ── Профили и подписки ──────────────────────────────────────── */
+/* ── Профили и дружба ─────────────────────────────────────────── */
 
 export function useProfile(username: string, initialData?: UserProfile) {
   return useQuery({
@@ -89,61 +89,98 @@ export function useProfile(username: string, initialData?: UserProfile) {
   });
 }
 
-type FollowResult = { isFollowedByMe: boolean; followersCount: number };
+type FriendActionResult = { friendStatus: UserProfile["friendStatus"]; friendsCount: number };
 
-/** Подписка тоже оптимистична: кнопка не должна «думать» полсекунды. */
-export function useToggleFollow(username: string) {
+function patchProfile(client: ReturnType<typeof useQueryClient>, username: string, patch: Partial<UserProfile>) {
+  client.setQueryData<UserProfile>(queryKeys.profile(username), (profile) =>
+    profile ? { ...profile, ...patch } : profile,
+  );
+}
+
+/**
+ * Одна мутация на все переходы кнопки профиля: «Добавить в друзья»,
+ * «Отменить заявку», «Удалить из друзей» — все три бьют по одному и тому же
+ * REST-ресурсу (POST создаёт связь, DELETE убирает её), различие только
+ * в оптимистичном состоянии, которое мы предсказываем на клиенте.
+ */
+export function useSendFriendRequest(username: string) {
   const client = useQueryClient();
-  const key = queryKeys.profile(username);
 
   return useMutation({
-    mutationFn: (isFollowed: boolean) =>
-      isFollowed
-        ? api.delete<FollowResult>(`/users/${username}/follow`)
-        : api.post<FollowResult>(`/users/${username}/follow`),
-
-    onMutate: async (isFollowed) => {
-      await client.cancelQueries({ queryKey: key });
-      const snapshot = client.getQueryData<UserProfile>(key);
-
-      client.setQueryData<UserProfile>(key, (profile) =>
-        profile
-          ? {
-              ...profile,
-              isFollowedByMe: !isFollowed,
-              followersCount: profile.followersCount + (isFollowed ? -1 : 1),
-            }
-          : profile,
-      );
-
+    mutationFn: () => api.post<FriendActionResult>(`/users/${username}/friend-request`),
+    onMutate: async () => {
+      await client.cancelQueries({ queryKey: queryKeys.profile(username) });
+      const snapshot = client.getQueryData<UserProfile>(queryKeys.profile(username));
+      patchProfile(client, username, { friendStatus: "outgoing" });
       return snapshot;
     },
-
     onError: (_error, _variables, snapshot) => {
-      if (snapshot) client.setQueryData(key, snapshot);
+      if (snapshot) client.setQueryData(queryKeys.profile(username), snapshot);
     },
+    onSuccess: (result) => patchProfile(client, username, result),
+  });
+}
 
+export function useRemoveFriendConnection(username: string) {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => api.delete<FriendActionResult>(`/users/${username}/friend-request`),
+    onMutate: async () => {
+      await client.cancelQueries({ queryKey: queryKeys.profile(username) });
+      const snapshot = client.getQueryData<UserProfile>(queryKeys.profile(username));
+      patchProfile(client, username, { friendStatus: "none" });
+      return snapshot;
+    },
+    onError: (_error, _variables, snapshot) => {
+      if (snapshot) client.setQueryData(queryKeys.profile(username), snapshot);
+    },
     onSuccess: (result) => {
-      client.setQueryData<UserProfile>(key, (profile) =>
-        profile ? { ...profile, ...result } : profile,
-      );
-      // Состав ленты «Подписки» изменился — её нужно перечитать.
+      patchProfile(client, username, result);
+      // Состав ленты «Друзья» изменился — её нужно перечитать.
       void client.invalidateQueries({ queryKey: ["feed"] });
     },
   });
 }
 
-export function useFollowList(username: string, direction: "followers" | "following") {
+/**
+ * Принять/отклонить заявку — действуют не только с профиля, но и прямо
+ * из уведомления, поэтому не привязаны к queryKeys.profile конкретного
+ * компонента: инвалидируют профиль явно переданным username.
+ */
+export function useAcceptFriendRequest() {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (username: string) =>
+      api.post<FriendActionResult>(`/users/${username}/friend-request/accept`),
+    onSuccess: (result, username) => {
+      patchProfile(client, username, result);
+      void client.invalidateQueries({ queryKey: queryKeys.notifications });
+      void client.invalidateQueries({ queryKey: ["feed"] });
+    },
+  });
+}
+
+export function useDeclineFriendRequest() {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (username: string) =>
+      api.post<FriendActionResult>(`/users/${username}/friend-request/decline`),
+    onSuccess: (result, username) => {
+      patchProfile(client, username, result);
+      void client.invalidateQueries({ queryKey: queryKeys.notifications });
+    },
+  });
+}
+
+export function useFriendsList(username: string) {
   return useInfiniteQuery({
-    queryKey:
-      direction === "followers"
-        ? queryKeys.followers(username)
-        : queryKeys.following(username),
+    queryKey: queryKeys.friends(username),
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) =>
-      api.get<Page<UserSummary>>(
-        `/users/${username}/${direction}${qs({ cursor: pageParam, limit: PAGE_SIZE })}`,
-      ),
+      api.get<Page<UserSummary>>(`/users/${username}/friends${qs({ cursor: pageParam, limit: PAGE_SIZE })}`),
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 }

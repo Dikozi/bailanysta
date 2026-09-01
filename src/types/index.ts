@@ -10,20 +10,27 @@ export type UserSummary = {
   avatarColor: string;
 };
 
+/**
+ * Отношение текущего зрителя с профилем — заменяет собой прежний
+ * односторонний isFollowedByMe. "incoming" отдельно от "outgoing": кнопка
+ * на профиле должна показать разные вещи для «я позвал» и «меня позвали».
+ */
+export type FriendStatus = "none" | "outgoing" | "incoming" | "friends";
+
 export type UserProfile = UserSummary & {
   bio: string | null;
+  status: string | null;
   createdAt: string;
   postsCount: number;
-  followersCount: number;
-  followingCount: number;
-  /** Подписан ли текущий пользователь на этого. Для гостя — false. */
-  isFollowedByMe: boolean;
+  friendsCount: number;
+  friendStatus: FriendStatus;
   isMe: boolean;
 };
 
 export type CurrentUser = UserSummary & {
   email: string;
   bio: string | null;
+  status: string | null;
 };
 
 export type Post = {
@@ -53,7 +60,7 @@ export type Comment = {
   canDelete: boolean;
 };
 
-export type NotificationType = "LIKE" | "COMMENT" | "FOLLOW";
+export type NotificationType = "LIKE" | "COMMENT" | "FRIEND_REQUEST" | "FRIEND_ACCEPTED";
 
 export type Notification = {
   id: string;
@@ -64,6 +71,20 @@ export type Notification = {
   preview: string | null;
   isRead: boolean;
   createdAt: string;
+};
+
+export type Message = {
+  id: string;
+  content: string;
+  createdAt: string;
+  isMine: boolean;
+};
+
+/** Одна строка списка бесед: собеседник, последнее сообщение, непрочитанное. */
+export type Conversation = {
+  peer: UserSummary;
+  lastMessage: { content: string; createdAt: string; isMine: boolean };
+  unreadCount: number;
 };
 
 export type Page<T> = {

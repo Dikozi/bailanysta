@@ -11,7 +11,7 @@ import { verifySession } from "@/server/auth/jwt";
  * добавлял бы задержку ко всей навигации. Настоящая проверка «пользователь
  * ещё существует» остаётся в requireUser() на уровне API.
  */
-const PROTECTED = ["/settings", "/notifications"];
+const PROTECTED = ["/settings", "/notifications", "/messages"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -28,5 +28,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/settings/:path*", "/notifications/:path*"],
+  matcher: ["/settings/:path*", "/notifications/:path*", "/messages/:path*"],
 };

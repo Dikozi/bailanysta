@@ -2,26 +2,34 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { Bell, Heart, MessageCircle, UserPlus } from "lucide-react";
+import { Bell, Check, Heart, MessageCircle, UserPlus, X } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/cn";
 import { relativeTime } from "@/lib/format";
-import { useMarkNotificationsRead, useNotifications } from "@/hooks/useSocial";
+import {
+  useAcceptFriendRequest,
+  useDeclineFriendRequest,
+  useMarkNotificationsRead,
+  useNotifications,
+} from "@/hooks/useSocial";
+import { useToast } from "@/providers/ToastProvider";
 import type { Notification, NotificationType } from "@/types";
 
 const ICONS: Record<NotificationType, typeof Heart> = {
   LIKE: Heart,
   COMMENT: MessageCircle,
-  FOLLOW: UserPlus,
+  FRIEND_REQUEST: UserPlus,
+  FRIEND_ACCEPTED: UserPlus,
 };
 
 const ICON_STYLES: Record<NotificationType, string> = {
   LIKE: "bg-like-soft text-like",
   COMMENT: "bg-accent-soft text-accent",
-  FOLLOW: "bg-surface-muted text-ink-muted",
+  FRIEND_REQUEST: "bg-surface-muted text-ink-muted",
+  FRIEND_ACCEPTED: "bg-accent-soft text-accent",
 };
 
 /*
@@ -34,7 +42,8 @@ const ICON_STYLES: Record<NotificationType, string> = {
 const EVENTS: Record<NotificationType, string> = {
   LIKE: "Новый лайк на вашем посте",
   COMMENT: "Новый комментарий к вашему посту",
-  FOLLOW: "Новый подписчик",
+  FRIEND_REQUEST: "Хочет добавить вас в друзья",
+  FRIEND_ACCEPTED: "Принял(а) вашу заявку в друзья",
 };
 
 export function NotificationList() {
@@ -72,7 +81,7 @@ export function NotificationList() {
       <EmptyState
         icon={Bell}
         title="Уведомлений пока нет"
-        description="Здесь появятся лайки, комментарии и новые подписчики."
+        description="Здесь появятся лайки, комментарии и заявки в друзья."
       />
     );
   }
@@ -102,7 +111,7 @@ export function NotificationList() {
 function NotificationRow({ notification }: { notification: Notification }) {
   const Icon = ICONS[notification.type];
 
-  // Лайк и комментарий ведут к посту, подписка — в профиль подписавшегося.
+  // Лайк и комментарий ведут к посту, заявка и её принятие — в профиль автора.
   const href = notification.postId
     ? `/post/${notification.postId}`
     : `/u/${notification.actor.username}`;
@@ -110,6 +119,11 @@ function NotificationRow({ notification }: { notification: Notification }) {
   return (
     <Link
       href={href}
+      onClick={(event) => {
+        // Кнопки «Принять/Отклонить» лежат внутри этой же кликабельной строки —
+        // без остановки их нажатие ещё и уводило бы на профиль заявителя.
+        if ((event.target as HTMLElement).closest("button")) event.preventDefault();
+      }}
       className={cn(
         "flex gap-3 border-b border-line px-4 py-4 transition-colors hover:bg-surface-hover sm:px-5",
         // Непрочитанные подсвечены мягкой заливкой, а не жирным шрифтом:
@@ -146,7 +160,55 @@ function NotificationRow({ notification }: { notification: Notification }) {
         {notification.preview && (
           <p className="mt-1 truncate text-[14px] text-ink-faint">«{notification.preview}»</p>
         )}
+
+        {notification.type === "FRIEND_REQUEST" && (
+          <FriendRequestActions username={notification.actor.username} />
+        )}
       </div>
     </Link>
+  );
+}
+
+/**
+ * Принять/отклонить прямо из уведомления — по требованию сценария
+ * «второй видит заявку в уведомлениях». Отдельного экрана со списком
+ * заявок нет: этот ряд и есть тот экран.
+ */
+function FriendRequestActions({ username }: { username: string }) {
+  const accept = useAcceptFriendRequest();
+  const decline = useDeclineFriendRequest();
+  const { toast } = useToast();
+
+  const pending = accept.isPending || decline.isPending;
+
+  if (accept.isSuccess) {
+    return <p className="mt-2 text-[13px] font-semibold text-accent">Заявка принята</p>;
+  }
+  if (decline.isSuccess) {
+    return <p className="mt-2 text-[13px] text-ink-faint">Заявка отклонена</p>;
+  }
+
+  return (
+    <div className="mt-2 flex gap-2">
+      <Button
+        size="sm"
+        loading={accept.isPending}
+        disabled={pending}
+        onClick={() => accept.mutate(username, { onError: (error) => toast(error.message, "error") })}
+      >
+        <Check className="size-4" />
+        Принять
+      </Button>
+      <Button
+        size="sm"
+        variant="secondary"
+        loading={decline.isPending}
+        disabled={pending}
+        onClick={() => decline.mutate(username, { onError: (error) => toast(error.message, "error") })}
+      >
+        <X className="size-4" />
+        Отклонить
+      </Button>
+    </div>
   );
 }

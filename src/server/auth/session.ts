@@ -55,6 +55,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       displayName: true,
       avatarColor: true,
       bio: true,
+      status: true,
     },
   });
 

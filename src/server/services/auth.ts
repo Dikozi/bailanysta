@@ -13,6 +13,7 @@ const currentUserSelect = {
   displayName: true,
   avatarColor: true,
   bio: true,
+  status: true,
 } as const;
 
 export async function register(input: RegisterInput): Promise<CurrentUser> {

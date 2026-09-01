@@ -18,12 +18,22 @@ export async function listPosts(
 ): Promise<Page<Post>> {
   const filters: Prisma.PostWhereInput[] = [];
 
-  if (query.feed === "following") {
+  if (query.feed === "friends") {
     if (!viewerId) return { items: [], nextCursor: null };
-    // Своя лента = посты тех, на кого подписан, плюс собственные:
+    // Лента друзей = посты тех, с кем есть принятая дружба, плюс собственные:
     // пустая лента у нового пользователя выглядела бы поломкой.
     filters.push({
-      OR: [{ author: { followers: { some: { followerId: viewerId } } } }, { authorId: viewerId }],
+      OR: [
+        { authorId: viewerId },
+        {
+          author: {
+            OR: [
+              { sentFriendRequests: { some: { receiverId: viewerId, status: "ACCEPTED" } } },
+              { friendRequestsToMe: { some: { senderId: viewerId, status: "ACCEPTED" } } },
+            ],
+          },
+        },
+      ],
     });
   }
 

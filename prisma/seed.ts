@@ -9,7 +9,7 @@ import { pickAvatarColor } from "../src/lib/constants";
  * Наполнение базы демо-данными.
  *
  * Цель — чтобы приложение сразу выглядело живым: заполненная лента, реальные
- * обсуждения, взаимные подписки и непрочитанные уведомления у демо-аккаунта.
+ * обсуждения, дружеские связи, переписки и непрочитанные уведомления у демо-аккаунта.
  * По пустому интерфейсу невозможно понять, работают ли пагинация и счётчики.
  */
 
@@ -40,60 +40,70 @@ const PEOPLE = [
     displayName: "Демо-аккаунт",
     email: "demo@bailanysta.kz",
     bio: "Аккаунт для быстрого знакомства с Bailanysta. Заходите и пробуйте всё подряд.",
+    status: "Пробую всё подряд",
   },
   {
     username: "aizhan",
     displayName: "Айжан Сериккызы",
     email: "aizhan@bailanysta.kz",
     bio: "Продуктовый дизайнер. Верю, что интерфейс должен молчать, пока его не спросят.",
+    status: "Рисую макеты, отвечаю не сразу",
   },
   {
     username: "daniyar",
     displayName: "Данияр Ахметов",
     email: "daniyar@bailanysta.kz",
     bio: "Бэкенд, Postgres и слишком много кофе. Пишу про базы данных без занудства.",
+    status: "Чиню прод, не беспокоить",
   },
   {
     username: "madina",
     displayName: "Мадина Ерлан",
     email: "madina@bailanysta.kz",
     bio: "Фронтенд и доступность. Тестирую всё с клавиатуры.",
+    status: "Тестирую с клавиатуры",
   },
   {
     username: "olzhas",
     displayName: "Олжас Кайрат",
     email: "olzhas@bailanysta.kz",
     bio: "Основатель маленькой студии. Рассказываю, как это выглядит на самом деле.",
+    status: "Собеседую в студию",
   },
   {
     username: "kamila",
     displayName: "Камила Нурлан",
     email: "kamila@bailanysta.kz",
     bio: "Data science, графики и здоровый скепсис к метрикам.",
+    status: "Считаю метрики",
   },
   {
     username: "arsen",
     displayName: "Арсен Тлеуберди",
     email: "arsen@bailanysta.kz",
     bio: "DevOps. Если у вас всё упало — это, наверное, DNS.",
+    status: "На дежурстве",
   },
   {
     username: "sabina",
     displayName: "Сабина Жумабек",
     email: "sabina@bailanysta.kz",
     bio: "Пишу тексты для продуктов. Люблю короткие предложения.",
+    status: "Переписываю тексты",
   },
   {
     username: "timur",
     displayName: "Тимур Абдулла",
     email: "timur@bailanysta.kz",
     bio: "Мобильная разработка, Swift и горы по выходным.",
+    status: "В горах, связи может не быть",
   },
   {
     username: "aliya",
     displayName: "Алия Мурат",
     email: "aliya@bailanysta.kz",
     bio: "QA. Ломаю ваши формы нежно, но методично.",
+    status: "Ищу баги в вашем коде",
   },
 ] as const;
 
@@ -353,7 +363,8 @@ async function main() {
   await prisma.hashtag.deleteMany();
   await prisma.comment.deleteMany();
   await prisma.like.deleteMany();
-  await prisma.follow.deleteMany();
+  await prisma.message.deleteMany();
+  await prisma.friendRequest.deleteMany();
   await prisma.post.deleteMany();
   await prisma.user.deleteMany();
 
@@ -368,6 +379,7 @@ async function main() {
         username: person.username,
         displayName: person.displayName,
         bio: person.bio,
+        status: person.status,
         passwordHash,
         avatarColor: pickAvatarColor(person.username),
       },
@@ -411,35 +423,88 @@ async function main() {
     }
   }
 
-  console.log("Создаю подписки…");
+  console.log("Создаю дружеские связи…");
   const allIds = [...users.values()];
   const demoId = users.get("demo")!;
 
-  for (const followerId of allIds) {
-    for (const followingId of allIds) {
-      if (followerId === followingId) continue;
-      // Демо-аккаунт подписан на большинство — чтобы лента «Подписки» была живой.
-      const chance = followerId === demoId ? 0.7 : 0.35;
+  // Дружба симметрична, поэтому перебираем только неупорядоченные пары:
+  // (A,B) и (B,A) — одна и та же связь, а не две разные.
+  for (let i = 0; i < allIds.length; i++) {
+    for (let j = i + 1; j < allIds.length; j++) {
+      const a = allIds[i];
+      const b = allIds[j];
+
+      // Демо-аккаунт дружит с большинством — чтобы лента «Друзья»
+      // и список бесед были живыми сразу после установки.
+      const involvesDemo = a === demoId || b === demoId;
+      const chance = involvesDemo ? 0.75 : 0.3;
       if (random() > chance) continue;
 
-      await prisma.follow.create({
+      const createdAt = new Date(now - Math.floor(random() * 30 * 24 * 60) * 60 * 1000);
+
+      // Часть заявок оставляем непринятыми — чтобы у демо-аккаунта было
+      // что принимать/отклонять прямо в уведомлениях.
+      const stillPending = involvesDemo && random() > 0.78;
+
+      await prisma.friendRequest.create({
         data: {
-          followerId,
-          followingId,
-          createdAt: new Date(now - Math.floor(random() * 30 * 24 * 60) * 60 * 1000),
+          senderId: a,
+          receiverId: b,
+          status: stillPending ? "PENDING" : "ACCEPTED",
+          createdAt,
         },
       });
 
-      if (followingId === demoId) {
+      if (b === demoId) {
         await prisma.notification.create({
           data: {
             recipientId: demoId,
-            actorId: followerId,
-            type: "FOLLOW",
-            isRead: random() > 0.6,
+            actorId: a,
+            type: stillPending ? "FRIEND_REQUEST" : "FRIEND_ACCEPTED",
+            isRead: !stillPending && random() > 0.5,
+            createdAt,
           },
         });
       }
+    }
+  }
+
+  console.log("Создаю переписки…");
+  const demoFriends = await prisma.friendRequest.findMany({
+    where: {
+      status: "ACCEPTED",
+      OR: [{ senderId: demoId }, { receiverId: demoId }],
+    },
+    select: { senderId: true, receiverId: true },
+  });
+
+  const CHAT_LINES = [
+    "Привет! Видел твой последний пост — прямо в точку.",
+    "Слушай, а можешь скинуть ту ссылку?",
+    "Да, конечно, сейчас найду.",
+    "Спасибо! Как раз то, что искал.",
+    "Кстати, ты на конференции будешь?",
+    "Планирую. Пересечёмся там?",
+  ];
+
+  for (const friendship of demoFriends.slice(0, 4)) {
+    const peerId = friendship.senderId === demoId ? friendship.receiverId : friendship.senderId;
+    const lineCount = 2 + Math.floor(random() * 4);
+
+    for (let k = 0; k < lineCount; k++) {
+      // Чередуем стороны, чтобы переписка выглядела диалогом, а не монологом.
+      const fromDemo = k % 2 === 0;
+      await prisma.message.create({
+        data: {
+          senderId: fromDemo ? demoId : peerId,
+          receiverId: fromDemo ? peerId : demoId,
+          content: CHAT_LINES[k % CHAT_LINES.length],
+          // Последнее входящее оставляем непрочитанным — так у бейджа
+          // сообщений сразу есть что показать.
+          isRead: fromDemo || k < lineCount - 1,
+          createdAt: new Date(now - (lineCount - k) * 11 * 60 * 1000),
+        },
+      });
     }
   }
 
@@ -511,7 +576,8 @@ async function main() {
     постов: await prisma.post.count(),
     лайков: await prisma.like.count(),
     комментариев: await prisma.comment.count(),
-    подписок: await prisma.follow.count(),
+    дружеских_связей: await prisma.friendRequest.count(),
+    сообщений: await prisma.message.count(),
     хэштегов: await prisma.hashtag.count(),
     уведомлений: await prisma.notification.count(),
   };

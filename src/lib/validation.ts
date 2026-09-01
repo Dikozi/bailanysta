@@ -3,10 +3,12 @@ import {
   BIO_MAX_LENGTH,
   COMMENT_MAX_LENGTH,
   DISPLAY_NAME_MAX_LENGTH,
+  MESSAGE_MAX_LENGTH,
   PAGE_SIZE,
   PAGE_SIZE_MAX,
   PASSWORD_MIN_LENGTH,
   POST_MAX_LENGTH,
+  STATUS_MAX_LENGTH,
   USERNAME_MAX_LENGTH,
   USERNAME_MIN_LENGTH,
 } from "./constants";
@@ -74,6 +76,20 @@ export const updateProfileSchema = z.object({
     .max(BIO_MAX_LENGTH, `Максимум ${BIO_MAX_LENGTH} символов`)
     .nullish()
     .transform((value) => (value === "" ? null : (value ?? null))),
+  status: z
+    .string()
+    .trim()
+    .max(STATUS_MAX_LENGTH, `Максимум ${STATUS_MAX_LENGTH} символов`)
+    .nullish()
+    .transform((value) => (value === "" ? null : (value ?? null))),
+});
+
+export const sendMessageSchema = z.object({
+  content: z
+    .string()
+    .trim()
+    .min(1, "Сообщение не может быть пустым")
+    .max(MESSAGE_MAX_LENGTH, `Максимум ${MESSAGE_MAX_LENGTH} символов`),
 });
 
 /** Строки из query-string, поэтому coerce и мягкие дефолты. */
@@ -83,7 +99,7 @@ export const paginationSchema = z.object({
 });
 
 export const feedQuerySchema = paginationSchema.extend({
-  feed: z.enum(["global", "following"]).default("global"),
+  feed: z.enum(["global", "friends"]).default("global"),
   authorId: z.string().min(1).optional(),
   tag: z.string().min(1).optional(),
   q: z.string().trim().min(1).max(100).optional(),
@@ -108,3 +124,4 @@ export type FeedQuery = z.infer<typeof feedQuerySchema>;
 export type AiGenerateInput = z.infer<typeof aiGenerateSchema>;
 export type AiMode = AiGenerateInput["mode"];
 export type AiTone = AiGenerateInput["tone"];
+export type SendMessageInput = z.infer<typeof sendMessageSchema>;

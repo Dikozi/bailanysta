@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, Home, Search, Settings, User } from "lucide-react";
+import { Bell, Home, MessagesSquare, Search, Settings, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useCurrentUser } from "@/providers/SessionProvider";
 import { useUnreadCount } from "@/hooks/useSocial";
+import { useUnreadMessagesCount } from "@/hooks/useMessages";
 
 type NavItem = {
   href: string;
@@ -19,8 +20,8 @@ type NavItem = {
 
 function useNavItems(): NavItem[] {
   const user = useCurrentUser();
-  const { data } = useUnreadCount(Boolean(user));
-  const unread = data?.count ?? 0;
+  const { data: notifications } = useUnreadCount(Boolean(user));
+  const { data: messages } = useUnreadMessagesCount(Boolean(user));
 
   const items: NavItem[] = [
     { href: "/", label: "Лента", icon: Home, exact: true },
@@ -29,7 +30,18 @@ function useNavItems(): NavItem[] {
 
   if (user) {
     items.push(
-      { href: "/notifications", label: "Уведомления", icon: Bell, badge: unread },
+      {
+        href: "/messages",
+        label: "Сообщения",
+        icon: MessagesSquare,
+        badge: messages?.count ?? 0,
+      },
+      {
+        href: "/notifications",
+        label: "Уведомления",
+        icon: Bell,
+        badge: notifications?.count ?? 0,
+      },
       { href: `/u/${user.username}`, label: "Профиль", icon: User },
       { href: "/settings", label: "Настройки", icon: Settings },
     );
@@ -97,7 +109,7 @@ export function MobileTabBar() {
               aria-label={item.label}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex flex-1 flex-col items-center gap-0.5 py-2.5 transition-colors",
+                "flex min-w-0 flex-1 flex-col items-center gap-0.5 px-0.5 py-2.5 transition-colors",
                 active ? "text-accent" : "text-ink-faint hover:text-ink-muted",
               )}
             >
@@ -105,7 +117,9 @@ export function MobileTabBar() {
                 <item.icon className="size-5.5" strokeWidth={active ? 2.4 : 2} />
                 {item.badge ? <UnreadDot count={item.badge} /> : null}
               </span>
-              <span className="text-[10px] font-semibold">{item.label}</span>
+              <span className="w-full truncate text-center text-[10px] font-semibold">
+                {item.label}
+              </span>
             </Link>
           );
         })}
