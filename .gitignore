@@ -1,53 +1,30 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
 
 # next.js
 /.next/
 /out/
+next-env.d.ts
+*.tsbuildinfo
 
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
+# env
 .env*
 !.env.example
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# misc
+.DS_Store
+*.log
 
-/src/generated/prisma
-
-
-# служебные скиллы, устанавливаемые CLI-инструментами
+# Claude Code: коммитятся только скиллы и агенты
 /.claude/*
 !/.claude/skills/
 !/.claude/agents/
-/.windsurf
-/.agents
-/skills-lock.json
+
+# impeccable: локальные артефакты ревью и сборки
+/.impeccable/review/
+/.impeccable/build/
+/.impeccable/mocks/
+/.impeccable/config.local.json
