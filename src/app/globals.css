@@ -21,8 +21,10 @@
   --color-line: rgb(160 180 255 / 0.1);
   --color-line-strong: rgb(160 180 255 / 0.18);
 
-  /* Единственный акцент — действие и сам ассистент */
-  --color-sky: #6cb4ff;
+  /* Единственный акцент — действие и сам ассистент; синий из логотипа */
+  --color-brand: #2aaafe;
+  --color-sky: #2aaafe;
+  --color-sky-hover: #5ec0ff;
   --color-sky-deep: #2f7de1;
   --color-sky-ink: #031126;
 
@@ -62,7 +64,7 @@
   }
 
   ::selection {
-    background: rgb(108 180 255 / 0.35);
+    background: rgb(42 170 254 / 0.35);
     color: #fff;
   }
 

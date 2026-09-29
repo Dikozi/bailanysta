@@ -57,7 +57,7 @@ Primary: Telegram contact of the owner — https://t.me/diaskadyrbekov. Secondar
 - Voice (from the bot's system prompts): short, on «ты», calm and concrete, warm without flattery, no bureaucratic language, no invented numbers.
 - Campaign slogan: «Меньше держать в голове. Больше успевать.»
 - Standing visual preference (chosen by owner over a bolder rolled direction): the category-standard AI-product landing, played straight — dark ground, live product demonstrations, restrained accents — at the craft level of Linear, Raycast and Superhuman.
-- Logo: eight unapproved concepts exist on the owner's machine; none chosen. Earlier explorations leaned deep navy (#001536) with sky-blue and white — not an approved palette.
+- Logo: approved by the owner — monogram "MA" (blue #2AAAFE M, white A) on deep navy, wordmark "My Assist". Source raster: public/brand/my-assist-logo.webp (owner-provided); vector mark traced from it in src/components/logo-mark.tsx. The logo blue is the site accent.
 
 ## Evidence on Hand
 

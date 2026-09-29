@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { LogoMark } from "./brand";
+import { LogoMark } from "./logo-mark";
 
 type Side = "in" | "out";
 
@@ -149,8 +149,8 @@ export function Typing() {
 export function ChatHeader({ status = "бот" }: { status?: string }) {
   return (
     <div className="bg-tg-head flex items-center gap-3 border-b border-black/30 px-4 py-2.5">
-      <span className="grid size-9 place-items-center rounded-full bg-gradient-to-b from-[#7cc0ff] to-[#3d8be6]">
-        <LogoMark className="size-5 text-white [&_path:last-child]:stroke-[#2f7de1]" />
+      <span className="bg-ink-950 grid size-9 place-items-center rounded-full ring-1 ring-white/10">
+        <LogoMark className="h-3.5 w-auto" />
       </span>
       <span className="flex flex-col leading-tight">
         <span className="text-[14.5px] font-semibold text-[#f5f7fa]">My Assist</span>

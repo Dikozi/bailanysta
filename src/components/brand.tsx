@@ -1,28 +1,12 @@
 import type { SVGProps } from "react";
+import { LogoMark } from "./logo-mark";
 
-/** Временный знак My Assist: облачко сообщения с галочкой — «сказал → сделано». */
-export function LogoMark(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M16 3C8.82 3 3 8.28 3 14.8c0 3.53 1.7 6.7 4.4 8.86-.2 1.73-.95 3.4-2.2 4.84a.6.6 0 0 0 .56.98c2.9-.36 5.2-1.44 6.83-2.58 1.08.25 2.22.39 3.41.39 7.18 0 13-5.28 13-11.8S23.18 3 16 3Z"
-        fill="currentColor"
-      />
-      <path
-        d="m10.6 15.2 3.7 3.7 7.2-7.4"
-        stroke="var(--color-ink-950)"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+export { LogoMark };
 
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
-      <LogoMark className="text-sky size-7" />
+    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+      <LogoMark className="h-[22px] w-auto" />
       <span className="text-[17px] font-semibold tracking-[-0.02em]">My Assist</span>
     </span>
   );

@@ -17,7 +17,7 @@ export function TelegramButton({
       href={site.telegram.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group bg-sky text-sky-ink inline-flex items-center justify-center rounded-full font-semibold whitespace-nowrap shadow-[0_8px_24px_-8px_rgb(108_180_255/0.55),inset_0_1px_0_rgb(255_255_255/0.45)] transition-[background-color,transform,box-shadow] duration-200 ease-out hover:bg-[#8ac4ff] hover:shadow-[0_10px_30px_-8px_rgb(108_180_255/0.7),inset_0_1px_0_rgb(255_255_255/0.5)] active:scale-[0.98] ${sizing} ${className}`}
+      className={`group bg-sky text-sky-ink hover:bg-sky-hover inline-flex items-center justify-center rounded-full font-semibold whitespace-nowrap shadow-[0_8px_24px_-8px_rgb(42_170_254/0.5),inset_0_1px_0_rgb(255_255_255/0.45)] transition-[background-color,transform,box-shadow] duration-200 ease-out hover:shadow-[0_10px_30px_-8px_rgb(42_170_254/0.65),inset_0_1px_0_rgb(255_255_255/0.5)] active:scale-[0.98] ${sizing} ${className}`}
     >
       <TelegramIcon className={size === "lg" ? "size-5" : "size-[18px]"} />
       {children}

@@ -15,8 +15,9 @@ export const metadata: Metadata = {
     locale: "ru_RU",
     type: "website",
     siteName: site.name,
+    images: [{ url: "/brand/my-assist-logo.webp", width: 1254, height: 1254, alt: "My Assist" }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary" },
 };
 
 export const viewport: Viewport = {
