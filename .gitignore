@@ -45,7 +45,9 @@ next-env.d.ts
 
 
 # служебные скиллы, устанавливаемые CLI-инструментами
-/.claude
+/.claude/*
+!/.claude/skills/
+!/.claude/agents/
 /.windsurf
 /.agents
 /skills-lock.json
