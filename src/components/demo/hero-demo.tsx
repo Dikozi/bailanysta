@@ -9,7 +9,15 @@ type Beat =
   | { at: number; kind: "voice"; duration: string; time: string }
   | { at: number; kind: "out"; text: string; time: string }
   | { at: number; kind: "typing" }
-  | { at: number; kind: "bot"; text: string; time: string; buttons?: string[][] }
+  | {
+      at: number;
+      kind: "bot";
+      text: string;
+      time: string;
+      buttons?: string[][];
+      /** Строка, которая «перелетает» в календарь */
+      fly?: string;
+    }
   | { at: number; kind: "cal"; event: CalEvent }
   | { at: number; kind: "toast" };
 
@@ -48,8 +56,9 @@ const SCENARIOS: Scenario[] = [
         time: "21:14",
         text: "✅ Сохранил: 3 задачи, 1 событие\n\n• Созвон с Азаматом — завтра, 10:00–11:00\n• Сдать отчёт — до пятницы\n• Купить корм коту",
         buttons: [["↩️ Отменить"]],
+        fly: "• Созвон с Азаматом — завтра, 10:00–11:00",
       },
-      { at: 3700, kind: "cal", event: { start: 10, end: 11, title: CALL } },
+      { at: 3900, kind: "cal", event: { start: 10, end: 11, title: CALL } },
       { at: 5000, kind: "toast" },
     ],
   },
@@ -94,6 +103,72 @@ const SCENARIOS: Scenario[] = [
 ];
 
 const HOLD_AFTER = 4200;
+const FLY_MS = 760;
+
+/** Текст бота с выделенной строкой-источником для перелёта в календарь. */
+function BotText({ text, fly }: { text: string; fly?: string }) {
+  if (!fly || !text.includes(fly)) return <>{text}</>;
+  const [before, after] = text.split(fly);
+  return (
+    <>
+      {before}
+      <span data-fly-source className="rounded-md">
+        {fly}
+      </span>
+      {after}
+    </>
+  );
+}
+
+/** Строка задачи летит из сообщения в видимый календарь по дуге. */
+function flyToCalendar(root: HTMLElement) {
+  const source = root.querySelector<HTMLElement>("[data-fly-source]");
+  const target = Array.from(root.querySelectorAll<HTMLElement>("[data-fly-target]")).find(
+    (el) => el.getClientRects().length > 0,
+  );
+  if (!source || !target) return;
+  const from = source.getBoundingClientRect();
+  const to = target.getBoundingClientRect();
+
+  const chip = document.createElement("div");
+  chip.textContent = "Созвон с Азаматом · 10:00";
+  chip.className =
+    "bg-sky/25 ring-sky/50 rounded-lg px-2 py-1.5 text-[12px] font-semibold text-[#cfe6ff] ring-1 shadow-[0_18px_40px_-12px_rgb(0_0_0/0.8)]";
+  Object.assign(chip.style, {
+    position: "fixed",
+    left: `${from.left}px`,
+    top: `${from.top}px`,
+    zIndex: "60",
+    pointerEvents: "none",
+    whiteSpace: "nowrap",
+    transformOrigin: "top left",
+  });
+  document.body.appendChild(chip);
+
+  const dx = to.left - from.left;
+  const dy = to.top - from.top;
+  const lift = Math.min(90, Math.abs(dx) * 0.25 + 30);
+  source.animate(
+    [{ backgroundColor: "rgb(42 170 254 / 0.28)" }, { backgroundColor: "rgb(42 170 254 / 0)" }],
+    { duration: 1100, easing: "ease-out" },
+  );
+  const anim = chip.animate(
+    [
+      { transform: "translate(0, 0) scale(1)", opacity: 0 },
+      { transform: "translate(0, -6px) scale(1.04)", opacity: 1, offset: 0.12 },
+      {
+        transform: `translate(${dx * 0.55}px, ${dy * 0.5 - lift}px) scale(1.06)`,
+        opacity: 1,
+        offset: 0.55,
+      },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.96)`, opacity: 0.9, offset: 0.92 },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.96)`, opacity: 0 },
+    ],
+    { duration: FLY_MS, easing: "cubic-bezier(0.45, 0, 0.25, 1)", fill: "forwards" },
+  );
+  anim.onfinish = () => chip.remove();
+  anim.oncancel = () => chip.remove();
+}
 const HOURS = [9, 10, 11, 12, 13, 14, 15, 16];
 const ROW = 40;
 
@@ -171,6 +246,16 @@ export function HeroDemo() {
     scenario.calInit,
   );
   const calChanged = shown.some((b) => b.kind === "cal");
+  // Событие появляется из пустого календаря — значит, задача прилетает из чата
+  const landing = calChanged && scenario.calInit === null && !reduced;
+  const landKey = landing ? `${runKey}-${index}` : null;
+
+  useEffect(() => {
+    if (!landKey || !rootRef.current) return;
+    const root = rootRef.current;
+    const frame = requestAnimationFrame(() => flyToCalendar(root));
+    return () => cancelAnimationFrame(frame);
+  }, [landKey]);
   const toast = shown.some((b) => b.kind === "toast");
 
   return (
@@ -206,7 +291,7 @@ export function HeroDemo() {
                 case "bot":
                   return (
                     <Bubble key={key} time={beat.time} buttons={beat.buttons} animate={anim}>
-                      {beat.text}
+                      <BotText text={beat.text} fly={beat.fly} />
                     </Bubble>
                   );
                 default:
@@ -219,14 +304,14 @@ export function HeroDemo() {
         <CalendarDay
           day={scenario.day}
           event={cal}
-          animateKey={calChanged ? `${runKey}-${index}-cal` : `${runKey}-${index}-init`}
-          reduced={reduced || !calChanged}
+          eventKey={`${runKey}-${index}`}
+          landing={landing}
         />
         <CalendarStrip
           day={scenario.day}
           event={cal}
-          animateKey={`${runKey}-${index}-${calChanged}`}
-          reduced={reduced || !calChanged}
+          eventKey={`${runKey}-${index}`}
+          landing={landing}
         />
       </div>
 
@@ -291,13 +376,13 @@ export function HeroDemo() {
 function CalendarDay({
   day,
   event,
-  animateKey,
-  reduced,
+  eventKey,
+  landing,
 }: {
   day: string;
   event: CalEvent | null;
-  animateKey: string;
-  reduced: boolean;
+  eventKey: string;
+  landing: boolean;
 }) {
   return (
     <div className="border-line bg-ink-850 hidden overflow-hidden rounded-2xl border sm:block">
@@ -331,13 +416,15 @@ function CalendarDay({
 
         {event ? (
           <div
-            key={animateKey}
-            className={`absolute right-2 left-[52px] rounded-lg px-2 py-1.5 transition-colors duration-500 ${
-              reduced ? "" : "anim-event"
+            key={eventKey}
+            data-fly-target
+            className={`absolute right-2 left-[52px] rounded-lg px-2 py-1.5 transition-[top,background-color,box-shadow] duration-700 ease-[var(--ease-out-expo)] ${
+              landing ? "anim-event" : ""
             } ${event.done ? "bg-mint/15 ring-mint/40 ring-1" : "bg-sky/20 ring-sky/45 ring-1"}`}
             style={{
               top: 8 + (event.start - 9) * ROW + 1,
               height: (event.end - event.start) * ROW - 3,
+              animationDelay: landing ? `${FLY_MS - 260}ms` : undefined,
             }}
           >
             <span
@@ -360,13 +447,13 @@ function CalendarDay({
 function CalendarStrip({
   day,
   event,
-  animateKey,
-  reduced,
+  eventKey,
+  landing,
 }: {
   day: string;
   event: CalEvent | null;
-  animateKey: string;
-  reduced: boolean;
+  eventKey: string;
+  landing: boolean;
 }) {
   return (
     <div className="border-line bg-ink-850 flex min-h-[58px] items-center gap-3 rounded-2xl border px-3.5 py-2.5 sm:hidden">
@@ -376,10 +463,12 @@ function CalendarStrip({
       </span>
       {event ? (
         <span
-          key={animateKey}
-          className={`ml-auto flex min-w-0 flex-col rounded-lg px-2.5 py-1.5 ${reduced ? "" : "anim-event"} ${
+          key={eventKey}
+          data-fly-target
+          className={`ml-auto flex min-w-0 flex-col rounded-lg px-2.5 py-1.5 transition-colors duration-700 ${landing ? "anim-event" : ""} ${
             event.done ? "bg-mint/15 ring-mint/40 ring-1" : "bg-sky/20 ring-sky/45 ring-1"
           }`}
+          style={{ animationDelay: landing ? `${FLY_MS - 260}ms` : undefined }}
         >
           <span
             className={`truncate text-[12px] leading-tight font-semibold ${event.done ? "text-mint" : "text-[#cfe6ff]"}`}
