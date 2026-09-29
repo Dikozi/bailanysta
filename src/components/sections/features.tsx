@@ -167,7 +167,7 @@ export function Features() {
           <Tile
             className="lg:col-span-6"
             title="Файлы и заметки — на Google Диск"
-            text="Кинь документ или фото — он окажется на Диске, а подпись к нему станет задачей."
+            text="Кинь документ или фото — он окажется на Диске, а подпись к нему станет задачей. Заметки тоже ложатся на Диск."
           >
             <div className="flex flex-col gap-2">
               <div className="flex flex-col items-end">
@@ -184,9 +184,11 @@ export function Features() {
                   <span className="mt-1.5 block">Завтра в 12 прочитать договор</span>
                 </div>
               </div>
-              <Bubble time="18:02">
-                Сохранил на Диск: Договор.pdf{"\n"}✅ Сохранил: Прочитать договор — завтра, 12:00
+              <Bubble time="18:02">✅ Сохранил: Прочитать договор — завтра, 12:00</Bubble>
+              <Bubble side="out" time="18:05">
+                Сохрани заметку: идея подарка — настольная лампа
               </Bubble>
+              <Bubble time="18:05">📝 Записал на Диск: note-идея-подарка.txt</Bubble>
             </div>
           </Tile>
 
