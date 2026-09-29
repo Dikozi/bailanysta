@@ -1,4 +1,4 @@
-import { CalendarDays, Cloud, FolderOpen, ListChecks, Mic, Sheet, Smartphone } from "lucide-react";
+import { CalendarDays, Cloud, FolderOpen, ListChecks, Mic, Sheet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { TelegramIcon } from "../brand";
 import { Container, SectionHeading } from "../ui";
@@ -55,7 +55,6 @@ export function Inside() {
         <div className="mt-14 grid items-center gap-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-4">
           <Column>
             <Node icon={TelegramIcon} title="Telegram" text="Текст, голосовые, файлы и фото" />
-            <Node icon={Smartphone} title="iPhone" text="Кнопка «Задача» через «Команды»" />
           </Column>
           <Connector />
           <Column>
@@ -76,7 +75,7 @@ export function Inside() {
                 </li>
                 <li className="flex gap-2">
                   <Cloud className="text-sky mt-0.5 size-4 shrink-0" aria-hidden />
-                  Работает в облаке Google — компьютер можно выключить
+                  Работает 24/7
                 </li>
               </ul>
             </div>
