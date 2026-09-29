@@ -63,6 +63,7 @@ Primary: Telegram contact of the owner — https://t.me/diaskadyrbekov. Secondar
 
 - No real screenshots, videos, testimonials, user counts, metrics, partners or press. Do not fabricate any of them.
 - Ten campaign illustrations and eight logo concepts exist on the owner's machine (not in this repo); they are drawn mockups, not product screenshots.
+- Verbatim bot message templates confirmed by the owner's brief (source: bot code `Code.gs`): «✅ Сохранил: …», «✅ Отметил: …», «📅 Перенёс: … → …», «🗑 Удалил: …», «⏰ Через 10 мин», «Уже занялся „…“? Отметь, когда закончишь.», «📝 Записал на Диск: …», «🤔 Какую задачу перенести?»; buttons «↩️ Отменить», «↩️ Не сделано», «✅ Готово», «⏭ Завтра», «🗑 Удалить», «🌙 Остальное перенести на завтра».
 - Demonstrations on the site must be clearly illustrative (reconstructed chat flows built from real bot message templates such as «✅ Сохранил: …», «⏰ Через 10 мин», «Уже занялся „…“? Отметь, когда закончишь.»).
 
 ## Product Principles

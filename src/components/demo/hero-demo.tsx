@@ -178,7 +178,7 @@ export function HeroDemo() {
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_220px] lg:grid-cols-[minmax(0,1fr)_236px]">
         <ChatWindow status={lastShown?.kind === "typing" ? "печатает…" : "бот"}>
           <div
-            className="flex h-[318px] flex-col justify-end gap-2 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_56px)] sm:h-[352px]"
+            className="flex h-[318px] flex-col justify-end gap-2 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_56px)] sm:h-[352px] sm:[mask-image:none]"
             aria-live="polite"
           >
             {shown.map((beat, i) => {
