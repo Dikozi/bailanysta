@@ -137,35 +137,6 @@ export function Features() {
 
           <Tile
             className="lg:col-span-7"
-            title="Кнопка «Задача» на iPhone"
-            text="Скажи Siri или нажми кнопку действия, продиктуй дело — и не открывай Telegram. Результат придёт в чат."
-          >
-            <div className="grid items-center gap-3 sm:grid-cols-[auto_minmax(0,1fr)]">
-              <div className="flex items-center gap-3 rounded-2xl bg-[#1c2733] px-3.5 py-3 sm:w-[210px]">
-                <span className="grid size-9 place-items-center rounded-[10px] bg-gradient-to-br from-[#4f6bff] to-[#c85cff]">
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="size-5 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden
-                  >
-                    <rect x="3" y="3" width="8" height="8" rx="2.5" />
-                    <rect x="13" y="13" width="8" height="8" rx="2.5" />
-                  </svg>
-                </span>
-                <span className="flex flex-col leading-tight">
-                  <span className="text-[14px] font-semibold text-[#f5f7fa]">Задача</span>
-                  <span className="text-[12px] text-[#8c9bab]">«Завтра в 9 отправить договор»</span>
-                </span>
-              </div>
-              <Bubble time="22:31">✅ Сохранил: Отправить договор — завтра, 09:00</Bubble>
-            </div>
-          </Tile>
-
-          <Tile
-            className="lg:col-span-6"
             title="Файлы и заметки — на Google Диск"
             text="Кинь документ или фото — он окажется на Диске, а подпись к нему станет задачей. Заметки тоже ложатся на Диск."
           >
@@ -189,22 +160,6 @@ export function Features() {
                 Сохрани заметку: идея подарка — настольная лампа
               </Bubble>
               <Bubble time="18:05">📝 Записал на Диск: note-идея-подарка.txt</Bubble>
-            </div>
-          </Tile>
-
-          <Tile
-            className="lg:col-span-6"
-            title="Работает, когда ты не у компьютера"
-            text="Ассистент живёт в облаке Google. А если ИИ перегружен, бот запомнит сообщение и вернётся к нему позже."
-          >
-            <div className="flex flex-col gap-2">
-              <Bubble side="out" time="09:15">
-                В пятницу в 18:00 забрать костюм из химчистки
-              </Bubble>
-              <Bubble time="09:15">
-                ИИ сейчас перегружен. Запомнил сообщение — обработаю чуть позже.
-              </Bubble>
-              <Bubble time="09:21">✅ Сохранил: Забрать костюм из химчистки — пт, 18:00</Bubble>
             </div>
           </Tile>
         </div>
