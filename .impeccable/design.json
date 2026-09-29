@@ -1,0 +1,566 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-29T00:00:00Z",
+  "title": "Design System: My Assist",
+  "extensions": {
+    "colorMeta": {
+      "ink-950": {
+        "role": "neutral",
+        "displayName": "Ink 950",
+        "canonical": "#04060d",
+        "tonalRamp": [
+          "#04060d",
+          "#070b17",
+          "#0a1020",
+          "#0e1529",
+          "#151e38",
+          "#1f2a4a",
+          "#3a4870",
+          "#7d88a8"
+        ]
+      },
+      "ink-900": {
+        "role": "neutral",
+        "displayName": "Ink 900",
+        "canonical": "#070b17",
+        "tonalRamp": [
+          "#04060d",
+          "#070b17",
+          "#0a1020",
+          "#0e1529",
+          "#151e38",
+          "#1f2a4a",
+          "#3a4870",
+          "#7d88a8"
+        ]
+      },
+      "ink-850": {
+        "role": "neutral",
+        "displayName": "Ink 850",
+        "canonical": "#0a1020",
+        "tonalRamp": [
+          "#04060d",
+          "#070b17",
+          "#0a1020",
+          "#0e1529",
+          "#151e38",
+          "#1f2a4a",
+          "#3a4870",
+          "#7d88a8"
+        ]
+      },
+      "ink-700": {
+        "role": "neutral",
+        "displayName": "Ink 700",
+        "canonical": "#151e38",
+        "tonalRamp": [
+          "#04060d",
+          "#070b17",
+          "#0a1020",
+          "#0e1529",
+          "#151e38",
+          "#1f2a4a",
+          "#3a4870",
+          "#7d88a8"
+        ]
+      },
+      "ink-600": {
+        "role": "neutral",
+        "displayName": "Ink 600",
+        "canonical": "#1f2a4a",
+        "tonalRamp": [
+          "#04060d",
+          "#070b17",
+          "#0a1020",
+          "#0e1529",
+          "#151e38",
+          "#1f2a4a",
+          "#3a4870",
+          "#7d88a8"
+        ]
+      },
+      "fg": {
+        "role": "neutral",
+        "displayName": "Frost",
+        "canonical": "#eef2ff",
+        "tonalRamp": [
+          "#2a3048",
+          "#4a5373",
+          "#7d88a8",
+          "#aab4d0",
+          "#c8d0e6",
+          "#dde3f5",
+          "#eef2ff",
+          "#f8f9ff"
+        ]
+      },
+      "fg-2": {
+        "role": "neutral",
+        "displayName": "Mist",
+        "canonical": "#aab4d0",
+        "tonalRamp": [
+          "#2a3048",
+          "#4a5373",
+          "#7d88a8",
+          "#aab4d0",
+          "#c8d0e6",
+          "#dde3f5",
+          "#eef2ff",
+          "#f8f9ff"
+        ]
+      },
+      "fg-3": {
+        "role": "neutral",
+        "displayName": "Dusk",
+        "canonical": "#7d88a8",
+        "tonalRamp": [
+          "#2a3048",
+          "#4a5373",
+          "#7d88a8",
+          "#aab4d0",
+          "#c8d0e6",
+          "#dde3f5",
+          "#eef2ff",
+          "#f8f9ff"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgb(160 180 255 / 0.1)",
+        "tonalRamp": []
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "rgb(160 180 255 / 0.18)",
+        "tonalRamp": []
+      },
+      "sky": {
+        "role": "primary",
+        "displayName": "Telegram Sky",
+        "canonical": "#6cb4ff",
+        "tonalRamp": [
+          "#031126",
+          "#0b2f5e",
+          "#17509a",
+          "#2f7de1",
+          "#4f9bf2",
+          "#6cb4ff",
+          "#a6d2ff",
+          "#e3f1ff"
+        ]
+      },
+      "sky-hover": {
+        "role": "primary",
+        "displayName": "Sky Hover",
+        "canonical": "#8ac4ff",
+        "tonalRamp": [
+          "#031126",
+          "#0b2f5e",
+          "#17509a",
+          "#2f7de1",
+          "#4f9bf2",
+          "#6cb4ff",
+          "#a6d2ff",
+          "#e3f1ff"
+        ]
+      },
+      "sky-deep": {
+        "role": "primary",
+        "displayName": "Deep Sky",
+        "canonical": "#2f7de1",
+        "tonalRamp": [
+          "#031126",
+          "#0b2f5e",
+          "#17509a",
+          "#2f7de1",
+          "#4f9bf2",
+          "#6cb4ff",
+          "#a6d2ff",
+          "#e3f1ff"
+        ]
+      },
+      "sky-ink": {
+        "role": "primary",
+        "displayName": "Sky Ink",
+        "canonical": "#031126",
+        "tonalRamp": [
+          "#031126",
+          "#0b2f5e",
+          "#17509a",
+          "#2f7de1",
+          "#4f9bf2",
+          "#6cb4ff",
+          "#a6d2ff",
+          "#e3f1ff"
+        ]
+      },
+      "mint": {
+        "role": "tertiary",
+        "displayName": "Done Mint",
+        "canonical": "#43e0a3",
+        "tonalRamp": [
+          "#03261a",
+          "#0a4a33",
+          "#137352",
+          "#1f9e71",
+          "#2fc38c",
+          "#43e0a3",
+          "#8cefc8",
+          "#dcfbee"
+        ]
+      },
+      "tg-bg": {
+        "role": "neutral",
+        "displayName": "Chat Ground",
+        "canonical": "#0e1621",
+        "tonalRamp": [
+          "#0b111a",
+          "#0e1621",
+          "#17212b",
+          "#182533",
+          "#22303f",
+          "#2b5278",
+          "#5aa3e6",
+          "#f5f7fa"
+        ]
+      },
+      "tg-head": {
+        "role": "neutral",
+        "displayName": "Chat Header",
+        "canonical": "#17212b",
+        "tonalRamp": [
+          "#0b111a",
+          "#0e1621",
+          "#17212b",
+          "#182533",
+          "#22303f",
+          "#2b5278",
+          "#5aa3e6",
+          "#f5f7fa"
+        ]
+      },
+      "tg-in": {
+        "role": "neutral",
+        "displayName": "Incoming Bubble",
+        "canonical": "#182533",
+        "tonalRamp": [
+          "#0b111a",
+          "#0e1621",
+          "#17212b",
+          "#182533",
+          "#22303f",
+          "#2b5278",
+          "#5aa3e6",
+          "#f5f7fa"
+        ]
+      },
+      "tg-out": {
+        "role": "neutral",
+        "displayName": "Outgoing Bubble",
+        "canonical": "#2b5278",
+        "tonalRamp": [
+          "#0b111a",
+          "#0e1621",
+          "#17212b",
+          "#182533",
+          "#22303f",
+          "#2b5278",
+          "#5aa3e6",
+          "#f5f7fa"
+        ]
+      },
+      "tg-btn": {
+        "role": "neutral",
+        "displayName": "Inline Key",
+        "canonical": "#22303f",
+        "tonalRamp": [
+          "#0b111a",
+          "#0e1621",
+          "#17212b",
+          "#182533",
+          "#22303f",
+          "#2b5278",
+          "#5aa3e6",
+          "#f5f7fa"
+        ]
+      },
+      "tg-text": {
+        "role": "neutral",
+        "displayName": "Chat Text",
+        "canonical": "#f5f7fa",
+        "tonalRamp": [
+          "#0b111a",
+          "#0e1621",
+          "#17212b",
+          "#182533",
+          "#22303f",
+          "#2b5278",
+          "#5aa3e6",
+          "#f5f7fa"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only; second clause dimmed to Mist."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section H2s and the closing CTA."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "The price, tabular."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Tile, step and timeline headings."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Section leads and hero subline, Mist; 18-19px from sm."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Tile copy, notes, FAQ answers (max 62ch)."
+      },
+      "chat": {
+        "displayName": "Chat",
+        "purpose": "Telegram bubble text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Nav, chips, captions, demo disclaimers."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Clock times, step numbers, the Telegram handle; 10-10.5px for calendar hours."
+      }
+    },
+    "shadows": [
+      {
+        "name": "cta-glow",
+        "value": "0 8px 24px -8px rgb(108 180 255 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.45)",
+        "purpose": "Primary button at rest."
+      },
+      {
+        "name": "cta-glow-hover",
+        "value": "0 10px 30px -8px rgb(108 180 255 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.5)",
+        "purpose": "Primary button hover."
+      },
+      {
+        "name": "window-lift",
+        "value": "0 30px 80px -20px rgb(0 0 0 / 0.7), 0 2px 6px rgb(0 0 0 / 0.4)",
+        "purpose": "Chat window, the floating product surface."
+      },
+      {
+        "name": "toast-lift",
+        "value": "0 18px 40px -12px rgb(0 0 0 / 0.8)",
+        "purpose": "Reminder toast, paired with 12px backdrop blur."
+      },
+      {
+        "name": "top-highlight",
+        "value": "inset 0 1px 0 rgb(255 255 255 / 0.05)",
+        "purpose": "Feature tiles (0.04 on integration nodes)."
+      },
+      {
+        "name": "sky-glow",
+        "value": "radial-gradient(closest-side, rgb(47 125 225 / 0.22), transparent)",
+        "purpose": "Ambient light behind the hero demo (0.18 price card, 0.2 closing CTA)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrances and the FAQ plus rotation."
+      },
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Declared alternative easing."
+      },
+      {
+        "name": "state-change",
+        "value": "150-200ms ease-out",
+        "purpose": "Hover colour, border and background changes."
+      },
+      {
+        "name": "msg-in",
+        "value": "520ms ease-out-expo; opacity 0, translateY(8px) scale(0.98) blur(2px) to rest",
+        "purpose": "New chat message."
+      },
+      {
+        "name": "toast-in",
+        "value": "560ms ease-out-expo; opacity 0, translateY(-10px) scale(0.97) to rest",
+        "purpose": "Reminder toast."
+      },
+      {
+        "name": "event-land",
+        "value": "640ms ease-out-expo; clip-path reveal from top, round 8px",
+        "purpose": "Calendar event landing."
+      },
+      {
+        "name": "rail-fill",
+        "value": "scroll-driven scaleY via animation-timeline: view(), range entry 30% to cover 70%",
+        "purpose": "Day timeline rail; static where unsupported or reduced motion."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation and transition durations collapse to 1ms",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action: open the owner's Telegram. Hero, pricing (lg) and closing CTA.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z\"/></svg>Написать в Telegram</a>",
+      "css": ".ds-btn-primary{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:9999px;background:#6cb4ff;color:#031126;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;box-shadow:0 8px 24px -8px rgb(108 180 255/0.55),inset 0 1px 0 rgb(255 255 255/0.45);transition:background-color .2s ease-out,transform .2s ease-out,box-shadow .2s ease-out}.ds-btn-primary:hover{background:#8ac4ff;box-shadow:0 10px 30px -8px rgb(108 180 255/0.7),inset 0 1px 0 rgb(255 255 255/0.5)}.ds-btn-primary:active{transform:scale(.98)}.ds-btn-primary:focus-visible{outline:2px solid #6cb4ff;outline-offset:3px}"
+    },
+    {
+      "name": "Ghost Link",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary in-page action beside the primary button.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\">Как это работает<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14M19 12l-7 7-7-7\"/></svg></a>",
+      "css": ".ds-btn-ghost{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:9999px;border:1px solid rgb(160 180 255/0.18);color:#eef2ff;font-size:15px;font-weight:500;text-decoration:none;background:transparent;transition:border-color .2s,background-color .2s}.ds-btn-ghost:hover{border-color:#7d88a8;background:rgb(255 255 255/0.03)}.ds-btn-ghost:focus-visible{outline:2px solid #6cb4ff;outline-offset:3px}"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Sticky glass header: wordmark, section links, compact Telegram pill.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav-brand\"><svg viewBox=\"0 0 32 32\" width=\"28\" height=\"28\" fill=\"none\" aria-hidden=\"true\"><path d=\"M16 3C8.82 3 3 8.28 3 14.8c0 3.53 1.7 6.7 4.4 8.86-.2 1.73-.95 3.4-2.2 4.84a.6.6 0 0 0 .56.98c2.9-.36 5.2-1.44 6.83-2.58 1.08.25 2.22.39 3.41.39 7.18 0 13-5.28 13-11.8S23.18 3 16 3Z\" fill=\"#6cb4ff\"/><path d=\"m10.6 15.2 3.7 3.7 7.2-7.4\" stroke=\"#04060d\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>My Assist</span><nav class=\"ds-nav-links\"><a href=\"#\">Как это работает</a><a href=\"#\">Возможности</a><a href=\"#\">Цена</a><a href=\"#\">Вопросы</a></nav><a class=\"ds-nav-cta\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z\"/></svg>Написать</a></header>",
+      "css": ".ds-nav{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;display:flex;align-items:center;gap:32px;height:64px;padding:0 24px;background:rgb(4 6 13/0.8);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid rgb(160 180 255/0.1);color:#eef2ff}.ds-nav-brand{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:600;letter-spacing:-0.02em}.ds-nav-links{display:flex;gap:28px}.ds-nav-links a{color:#aab4d0;font-size:14px;text-decoration:none;transition:color .15s}.ds-nav-links a:hover{color:#eef2ff}.ds-nav-cta{margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:9999px;background:rgb(255 255 255/0.06);box-shadow:0 0 0 1px rgb(160 180 255/0.18);color:#eef2ff;font-size:14px;font-weight:500;text-decoration:none;transition:background-color .2s}.ds-nav-cta svg{color:#6cb4ff}.ds-nav-cta:hover{background:rgb(255 255 255/0.1)}.ds-nav a:focus-visible{outline:2px solid #6cb4ff;outline-offset:3px;border-radius:6px}"
+    },
+    {
+      "name": "Scenario Chip",
+      "kind": "chip",
+      "refersTo": "chip-scenario",
+      "description": "Replays a hero demo scenario; active chip shows autoplay progress.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip is-active\" aria-pressed=\"true\">Записать голосом<span class=\"ds-chip-bar\"></span></button><button class=\"ds-chip\">Перенести словами</button><button class=\"ds-chip\">Отметить готовое</button></div>",
+      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:8px}.ds-chip{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;position:relative;overflow:hidden;padding:6px 14px;border-radius:9999px;border:1px solid rgb(160 180 255/0.1);background:transparent;color:#aab4d0;font-size:13px;font-weight:500;cursor:pointer;transition:color .2s,border-color .2s,background-color .2s}.ds-chip:hover{border-color:rgb(160 180 255/0.18);color:#eef2ff}.ds-chip.is-active{border-color:rgb(108 180 255/0.4);background:rgb(108 180 255/0.1);color:#eef2ff}.ds-chip-bar{position:absolute;left:12px;right:12px;bottom:0;height:1px;background:rgb(108 180 255/0.7);transform-origin:left;transform:scaleX(.6)}.ds-chip:focus-visible{outline:2px solid #6cb4ff;outline-offset:3px}"
+    },
+    {
+      "name": "Feature Tile",
+      "kind": "card",
+      "refersTo": "feature-tile",
+      "description": "Bento tile: title and copy over a Telegram-ground well holding a live product snippet.",
+      "html": "<article class=\"ds-tile\"><div class=\"ds-tile-text\"><h3>Просроченное — в два нажатия</h3><p>После утреннего плана бот сам покажет хвосты.</p></div><div class=\"ds-tile-well\"><div class=\"ds-bubble-in\">Просрочено: Отправить договор<span class=\"ds-time\">08:01</span></div></div></article>",
+      "css": ".ds-tile{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;max-width:520px;border-radius:24px;border:1px solid rgb(160 180 255/0.1);background:#070b17;box-shadow:inset 0 1px 0 rgb(255 255 255/0.05)}.ds-tile-text{padding:28px 28px 0}.ds-tile h3{margin:0;color:#eef2ff;font-size:20px;font-weight:600;letter-spacing:-0.02em}.ds-tile p{margin:8px 0 0;color:#aab4d0;font-size:15px;line-height:1.625}.ds-tile-well{margin-top:24px;padding:20px;background:#0e1621;border-top:1px solid rgb(255 255 255/0.05)}.ds-bubble-in{display:inline-block;padding:8px 12px;border-radius:16px 16px 16px 6px;background:#182533;color:#f5f7fa;font-size:14px;line-height:1.45}.ds-time{float:right;margin:6px 0 0 12px;color:#6d7f8f;font-size:11px;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Telegram Chat",
+      "kind": "custom",
+      "refersTo": "chat-window",
+      "description": "Signature: Telegram-dark chat window with tailed bubbles and an inline keyboard.",
+      "html": "<div class=\"ds-chat\"><div class=\"ds-chat-head\"><span class=\"ds-ava\"></span><span><b>My Assist</b><small>бот</small></span></div><div class=\"ds-chat-body\"><div class=\"ds-out\">Завтра в 10 созвон с Азаматом<span class=\"ds-t\">21:14</span></div><div class=\"ds-in\">✅ Сохранил: Созвон с Азаматом — завтра, 10:00<span class=\"ds-t\">21:14</span></div><div class=\"ds-keys\"><span>↩️ Отменить</span></div></div></div>",
+      "css": ".ds-chat{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;max-width:420px;overflow:hidden;border-radius:16px;border:1px solid rgb(255 255 255/0.06);background:#0e1621;box-shadow:0 30px 80px -20px rgb(0 0 0/0.7),0 2px 6px rgb(0 0 0/0.4)}.ds-chat-head{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#17212b;border-bottom:1px solid rgb(0 0 0/0.3)}.ds-ava{width:36px;height:36px;border-radius:9999px;background:linear-gradient(#7cc0ff,#3d8be6)}.ds-chat-head b{display:block;color:#f5f7fa;font-size:14.5px}.ds-chat-head small{color:#6d8196;font-size:12.5px}.ds-chat-body{display:flex;flex-direction:column;gap:8px;padding:16px}.ds-out,.ds-in{max-width:85%;padding:8px 12px;border-radius:16px;color:#f5f7fa;font-size:14px;line-height:1.45}.ds-out{align-self:flex-end;background:#2b5278;border-bottom-right-radius:6px}.ds-in{align-self:flex-start;background:#182533;border-bottom-left-radius:6px}.ds-t{float:right;margin:6px 0 0 12px;font-size:11px;color:#7da8d3;font-variant-numeric:tabular-nums}.ds-in .ds-t{color:#6d7f8f}.ds-keys{display:flex;gap:4px;max-width:85%;margin-top:-4px}.ds-keys span{flex:1;padding:6px 4px;border-radius:8px;background:rgb(34 48 63/0.9);color:#e9eef3;font-size:12.5px;font-weight:500;text-align:center}"
+    },
+    {
+      "name": "Reminder Toast",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature: floating Telegram notification over the demo.",
+      "html": "<div class=\"ds-toast\" role=\"status\"><div class=\"ds-toast-meta\"><span class=\"ds-toast-ic\"></span>My Assist<span class=\"ds-toast-when\">завтра, 09:50</span></div><p class=\"ds-toast-title\">⏰ Через 10 мин</p><p class=\"ds-toast-body\">Созвон с Азаматом · 10:00</p></div>",
+      "css": ".ds-toast{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;width:300px;padding:12px;border-radius:16px;border:1px solid rgb(255 255 255/0.1);background:rgb(27 36 54/0.95);backdrop-filter:blur(12px);box-shadow:0 18px 40px -12px rgb(0 0 0/0.8);animation:ds-toast-in 560ms cubic-bezier(0.16,1,0.3,1) both}.ds-toast-meta{display:flex;align-items:center;gap:8px;color:#7d88a8;font-size:11.5px}.ds-toast-ic{width:16px;height:16px;border-radius:5px;background:#2aabee}.ds-toast-when{margin-left:auto}.ds-toast-title{margin:6px 0 0;color:#eef2ff;font-size:13.5px;font-weight:600}.ds-toast-body{margin:0;color:#aab4d0;font-size:13px}@keyframes ds-toast-in{from{opacity:0;transform:translateY(-10px) scale(.97)}to{opacity:1;transform:none}}@media (prefers-reduced-motion:reduce){.ds-toast{animation:none}}"
+    },
+    {
+      "name": "Calendar Event",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature: event landed by the bot (sky) and its done state (mint).",
+      "html": "<div class=\"ds-cal\"><div class=\"ds-ev\">Созвон с Азаматом<span>10:00–11:00</span></div><div class=\"ds-ev is-done\">✅ Созвон с Азаматом<span>10:00–11:00</span></div></div>",
+      "css": ".ds-cal{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;display:flex;flex-direction:column;gap:8px;width:220px;padding:12px;border-radius:16px;border:1px solid rgb(160 180 255/0.1);background:#0a1020}.ds-ev{padding:6px 8px;border-radius:8px;background:rgb(108 180 255/0.2);box-shadow:0 0 0 1px rgb(108 180 255/0.45);color:#cfe6ff;font-size:11.5px;font-weight:600;line-height:1.25;transition:background-color .5s,color .5s}.ds-ev span{display:block;color:#aab4d0;font-family:'JetBrains Mono Variable',ui-monospace,monospace;font-size:10px;font-weight:400;font-variant-numeric:tabular-nums}.ds-ev.is-done{background:rgb(67 224 163/0.15);box-shadow:0 0 0 1px rgb(67 224 163/0.4);color:#43e0a3}"
+    },
+    {
+      "name": "Integration Node",
+      "kind": "card",
+      "refersTo": "node-card",
+      "description": "Flat ink-850 card naming a connected service, with a Lucide icon in a soft square.",
+      "html": "<div class=\"ds-node\"><span class=\"ds-node-ic\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg></span><span><b>Google Календарь</b><small>Дела с датой и временем</small></span></div>",
+      "css": ".ds-node{font-family:'Onest Variable',ui-sans-serif,system-ui,sans-serif;display:flex;align-items:flex-start;gap:12px;max-width:320px;padding:14px 16px;border-radius:16px;border:1px solid rgb(160 180 255/0.1);background:#0a1020;box-shadow:inset 0 1px 0 rgb(255 255 255/0.04)}.ds-node-ic{display:grid;place-items:center;width:32px;height:32px;flex-shrink:0;border-radius:8px;background:rgb(255 255 255/0.05);color:#aab4d0}.ds-node b{display:block;color:#eef2ff;font-size:15px;font-weight:600}.ds-node small{color:#aab4d0;font-size:13.5px;line-height:1.375}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Cool Ink, Real Chat",
+    "overview": "The page is the category-standard dark AI-product landing, played straight at Linear / Raycast / Superhuman finish. Its whole argument is carried by product UI rendered in real HTML: Telegram-dark chat windows, bubbles with inline keyboards, a day-column Google Calendar and a notification toast. The marketing layer around them is quiet on purpose, so the chat is the loudest thing on every screen.\n\nThe ground is a cold navy-black ink, stacked in a few tonal steps and separated by low-alpha blue hairlines rather than shadows. One sky-blue accent means \"act\" (the Telegram CTA) and \"the assistant\" (its mark, the landed event, the timeline). Mint means \"done\" and nothing else. Type is a single variable grotesque, Onest, set tight and heavy for display, with JetBrains Mono carrying times, commands and the handle.\n\nDensity is calm: generous section rhythm (96/128px), a 1200px container, bento tiles and a sticky-left / scrolling-right split for the long sections. Motion is short and exponential-out, and every animation has a reduced-motion path.",
+    "keyCharacteristics": [
+      "Cool ink ground (ink-950) with tonal layers (ink-900, ink-850) and hairline borders.",
+      "One accent, sky; mint is a state, not a second accent.",
+      "Product surfaces use their own Telegram-dark palette, never the page palette.",
+      "Onest for everything, tight negative tracking on display; mono only for times and handles.",
+      "Pills for actions, large soft corners (24px) for containers, 16px for chat windows.",
+      "Depth from tone and hairlines; real shadows are reserved for floating product UI."
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Sky is the only accent. If something is sky, it is either an action or the assistant itself.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mint Means Done Rule",
+        "body": "Mint appears only when a task or day is completed.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Palettes Rule",
+        "body": "Page chrome uses ink/fg/line; anything that depicts Telegram uses the tg palette. Do not paint product mockups with page tokens or page chrome with tg tokens.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Every price, time and count is set with tabular numerals.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono For Clocks Rule",
+        "body": "Mono is for machine-exact strings (times, commands, handles, step numbers), never for prose or headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Product Floats Rule",
+        "body": "Only depicted product UI casts a shadow. Page cards stay flat and are separated by tone and hairlines.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do show capability through rendered Telegram and Calendar UI in the tg palette, labelled as a demonstration in a 13px Dusk caption.",
+      "Do keep sky for actions and the assistant, and mint strictly for completed states.",
+      "Do separate page surfaces with ink tone steps and Hairline borders; open each section with a top hairline.",
+      "Do set headlines in Onest at 620 with -0.035em tracking and 1.02 line-height; dim a second clause to Mist rather than changing its size.",
+      "Do use tabular numerals for prices and times, and mono for clock times, step numbers and handles.",
+      "Do animate with ease-out-expo (cubic-bezier(0.16, 1, 0.3, 1)), 150–200ms for state changes and 500–650ms for entrances, and collapse all motion under prefers-reduced-motion."
+    ],
+    "donts": [
+      "Don't introduce a second accent colour in page chrome; decorative mint, violet or warm fills break the One Voice Rule (third-party UI depicted inside a demo, such as the iOS Shortcuts tile, keeps its own colours).",
+      "Don't cast drop shadows from page cards; shadows belong to floating product UI and the primary CTA glow.",
+      "Don't replace rendered product UI with static phone screenshots or generic icon-card grids.",
+      "Don't use emoji outside depicted bot messages and inline keyboards; page chrome uses SVG icons (Lucide, 1.5–2px stroke, or the brand glyphs).",
+      "Don't put small uppercase labels or kickers above headlines; headings stand alone.",
+      "Don't use mono for prose, headings or buttons."
+    ]
+  }
+}

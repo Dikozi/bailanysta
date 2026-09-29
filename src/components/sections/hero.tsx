@@ -6,7 +6,7 @@ import { Container, GhostLink, TelegramButton } from "../ui";
 export function Hero() {
   return (
     <section id="top" className="relative overflow-hidden" aria-labelledby="hero-title">
-      {/* Мягкий свет от демо: единственная подсветка на странице */}
+      {/* Мягкий свет за демо */}
       <div
         aria-hidden
         className="pointer-events-none absolute top-[-240px] right-[-160px] h-[720px] w-[900px] rounded-full bg-[radial-gradient(closest-side,rgb(47_125_225/0.22),transparent)]"
