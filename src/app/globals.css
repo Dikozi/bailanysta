@@ -170,6 +170,15 @@
   }
 }
 
+@keyframes drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(7px, -9px);
+  }
+}
+
 @keyframes typing {
   0%,
   60%,

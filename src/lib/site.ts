@@ -13,5 +13,6 @@ export const site = {
     total: "35 000 ₸",
     prepay: "15 000 ₸",
     supportDays: 7,
+    setupDays: 2,
   },
 } as const;

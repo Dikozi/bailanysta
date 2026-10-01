@@ -1,4 +1,5 @@
 import { DayCinema } from "../demo/day-cinema";
+import { NowBadge } from "../demo/now";
 import { MOMENTS } from "./day-moments";
 import { Container, SectionHeading } from "../ui";
 
@@ -26,7 +27,7 @@ export function Day() {
             aria-hidden
             className="rail-fill bg-sky/70 absolute top-2 bottom-2 left-[5px] w-px sm:left-[7px]"
           />
-          {MOMENTS.map((m) => (
+          {MOMENTS.map((m, i) => (
             <li key={m.time} className="relative pb-14 pl-8 last:pb-0 sm:pl-10">
               <span
                 aria-hidden
@@ -34,7 +35,15 @@ export function Day() {
               />
               <div className="grid gap-5 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-8">
                 <div>
-                  <p className="tabular text-sky font-mono text-[13px]">{m.time}</p>
+                  <p className="tabular text-sky font-mono text-[13px]">
+                    {m.time}
+                    {m.day === "Сегодня" ? (
+                      <NowBadge
+                        from={i === 0 ? 0 : m.minutes}
+                        to={MOMENTS[i + 1]?.day === "Сегодня" ? MOMENTS[i + 1].minutes : null}
+                      />
+                    ) : null}
+                  </p>
                   <h3 className="text-fg mt-1.5 text-[19px] font-semibold tracking-[-0.015em]">
                     {m.title}
                   </h3>

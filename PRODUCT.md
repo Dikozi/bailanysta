@@ -44,8 +44,10 @@ A closed loop in one Telegram chat: phrase or voice → task → Google Calendar
 
 - Setup: 35 000 ₸; prepayment 15 000 ₸.
 - Includes 1 week of support and adjustments after launch.
+- No subscription: the client pays once; no monthly fee (confirmed by owner).
+- Setup takes 2 days after prepayment (confirmed by owner).
 - Further changes after that week are paid separately by the client.
-- Who pays for Gemini overages and whose accounts host the bot: undecided — do not state.
+- Whose accounts host the bot: undecided — do not state.
 
 ### CTA
 

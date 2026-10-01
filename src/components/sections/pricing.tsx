@@ -19,7 +19,7 @@ const STEPS = [
     text: "Фиксируем договорённость и начинаем настройку.",
   },
   {
-    title: "Настраиваем ассистента",
+    title: `Настраиваем за ${site.price.setupDays} дня`,
     text: "Подключаем бота к Google и подстраиваем под твоё расписание.",
   },
   {
@@ -38,8 +38,8 @@ export function Pricing() {
       <Container>
         <SectionHeading
           id="price-title"
-          title="Одна цена. Настраиваем под тебя."
-          lead="Это не подписка на приложение, а личная установка: мы собираем ассистента под твой ритм и остаёмся рядом первую неделю."
+          title="Платишь один раз. Без абонентки."
+          lead={`Это не подписка на приложение, а личная установка: за ${site.price.setupDays} дня собираем ассистента под твой ритм и остаёмся рядом первую неделю.`}
         />
 
         <div className="mt-14 grid gap-4 lg:grid-cols-12">
@@ -70,7 +70,7 @@ export function Pricing() {
             <div className="relative mt-9 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
               <TelegramButton size="lg">Обсудить настройку</TelegramButton>
               <p className="text-fg-3 text-[13.5px]">
-                Доработки после первой недели оплачиваются отдельно.
+                Абонентской платы нет. Доработки после первой недели — отдельно.
               </p>
             </div>
           </div>

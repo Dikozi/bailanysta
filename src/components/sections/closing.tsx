@@ -11,10 +11,11 @@ export function FinalCta() {
       />
       <Container className="relative flex flex-col items-center py-28 text-center sm:py-36">
         <h2 id="cta-title" className="display text-fg max-w-3xl text-[clamp(2.2rem,5vw,3.75rem)]">
-          Расскажи, как проходит твой день
+          Меньше держать в голове. <span className="text-fg-2">Больше успевать.</span>
         </h2>
         <p className="text-fg-2 mt-5 max-w-xl text-[17px] leading-relaxed sm:text-lg">
-          Напиши в Telegram — обсудим, что ассистент должен взять на себя, и настроим его под тебя.
+          Расскажи в Telegram, как проходит твой день, — за {site.price.setupDays} дня настроим
+          ассистента под тебя.
         </p>
         <TelegramButton size="lg" className="mt-9" />
         <p className="tabular text-fg-3 mt-4 font-mono text-[13px]">{site.telegram.handle}</p>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MOMENTS } from "../sections/day-moments";
 import { LogoMark } from "../logo-mark";
+import { formatClock, useNowMinutes } from "./now";
 
 /** Небо для каждого момента: цвет верха и свечение у горизонта (r, g, b, a). */
 const SKY: { top: [number, number, number]; glow: [number, number, number, number] }[] = [
@@ -96,6 +97,8 @@ export function DayCinema({ className = "" }: { className?: string }) {
   };
 
   const moment = MOMENTS[index];
+  const now = useNowMinutes();
+  const nowSpot = now === null ? null : locateNow(now);
 
   return (
     <div
@@ -140,7 +143,21 @@ export function DayCinema({ className = "" }: { className?: string }) {
               </div>
             </div>
 
-            <nav aria-label="Моменты дня">
+            <nav aria-label="Моменты дня" className="relative">
+              {nowSpot ? (
+                <button
+                  type="button"
+                  onClick={() => jumpTo(nowSpot.index)}
+                  className="group absolute -top-9 -translate-x-1/2"
+                  style={{ left: `${nowSpot.left}%` }}
+                  aria-label={`Сейчас ${formatClock(now ?? 0)} — показать этот момент`}
+                >
+                  <span className="bg-sky text-sky-ink tabular block rounded-full px-2.5 py-1 text-[11.5px] font-semibold whitespace-nowrap shadow-[0_6px_18px_-6px_rgb(42_170_254/0.7)] transition-transform duration-200 group-hover:-translate-y-0.5">
+                    Сейчас {formatClock(now ?? 0)}
+                  </span>
+                  <span className="bg-sky mx-auto mt-1 block h-3 w-px" />
+                </button>
+              ) : null}
               <ol className="flex gap-1.5">
                 {MOMENTS.map((m, i) => (
                   <li key={m.time} className="flex-1">
@@ -184,6 +201,21 @@ export function DayCinema({ className = "" }: { className?: string }) {
       </div>
     </div>
   );
+}
+
+/** Где на шкале дня находится текущее время посетителя (только сегодняшние моменты). */
+function locateNow(now: number) {
+  const today = MOMENTS.filter((m) => m.day === "Сегодня");
+  let index = 0;
+  let frac = 0;
+  if (now >= today[today.length - 1].minutes) {
+    index = today.length - 1;
+    frac = Math.min(0.9, (now - today[index].minutes) / 180);
+  } else if (now >= today[0].minutes) {
+    index = today.findIndex((m, i) => now >= m.minutes && now < today[i + 1].minutes);
+    frac = (now - today[index].minutes) / (today[index + 1].minutes - today[index].minutes);
+  }
+  return { index, left: ((index + frac) / MOMENTS.length) * 100 + 0.5 };
 }
 
 function Phone({

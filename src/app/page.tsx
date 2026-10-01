@@ -1,3 +1,4 @@
+import { Chaos } from "@/components/demo/chaos";
 import { Day } from "@/components/sections/day";
 import { Faq } from "@/components/sections/faq";
 import { Features } from "@/components/sections/features";
@@ -19,6 +20,7 @@ export default function Home() {
       <Header />
       <main id="main">
         <Hero />
+        <Chaos />
         <Day />
         <Features />
         <Inside />
